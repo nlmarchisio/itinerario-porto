@@ -6,63 +6,58 @@
 <title>Itinerario Porto de Galinhas 20/11 - 28/11</title>
 <style>
 
-  :root { --sand:#fff6e3; --ink:#12303b; --muted:#5b747c; --sun:#ffc93c; --coral:#ff6b4a; --pink:#ff4f9a; --teal:#00b4c5; --palm:#1fb56b; --ok:#0f9d63; --line:#f3dcb0; --accent:#ff6b4a; --card:#ffffffd9; }
+  :root { --bg:#f3f8f9; --ink:#14323b; --muted:#5f7780; --brand:#0e8a96; --brand-d:#0b6a75; --warm:#e8704a; --sun:#ffd166; --line:#e1ebee; --ok:#0f8a5f; --card:#ffffff; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html { scroll-behavior:smooth; }
-  body { margin:0; font-family:ui-rounded,'SF Pro Rounded',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color:var(--ink); line-height:1.45; background:linear-gradient(180deg,#fff6e3 0%,#ffe8c6 45%,#d6f5f1 100%); background-attachment:fixed; }
-  a { color:#d9441f; }
+  body { margin:0; font-family:ui-rounded,'SF Pro Rounded',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color:var(--ink); line-height:1.45; background:var(--bg); }
+  a { color:var(--brand-d); }
   .note { font-size:.85rem; color:var(--muted); }
   .scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
 
-  /* Hero */
-  header.hero { position:relative; overflow:hidden; color:#fff; text-align:center; padding:calc(env(safe-area-inset-top) + 30px) 16px 84px; background:linear-gradient(180deg,#ffd95c 0%,#ff9d4d 42%,#ff5f8f 100%); }
-  .hero h1 { position:relative; z-index:2; margin:0 0 6px; font-size:clamp(1.9rem,7vw,2.8rem); letter-spacing:-.5px; text-shadow:0 3px 0 rgba(0,0,0,.16); }
-  .hero p { position:relative; z-index:2; margin:3px 0; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.22); }
-  .hero .pill { position:relative; z-index:2; display:inline-block; margin-top:10px; padding:6px 14px; border-radius:99px; background:#ffffff38; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid #ffffff66; font-weight:800; font-size:.9rem; }
-  .sun { position:absolute; top:-50px; right:-40px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,#fffbc2 0%,#ffe45c 50%,rgba(255,228,92,0) 72%); animation:glow 4s ease-in-out infinite alternate; }
-  @keyframes glow { from { transform:scale(1); opacity:.9; } to { transform:scale(1.14); opacity:1; } }
-  .palm { position:absolute; bottom:20px; width:118px; z-index:1; animation:sway 5s ease-in-out infinite alternate; transform-origin:50% 100%; }
-  .palm.l { left:-16px; }
-  .palm.r { right:-12px; width:100px; animation-delay:-2s; transform:scaleX(-1); }
-  @keyframes sway { from { rotate:-3deg; } to { rotate:3deg; } }
-  .wave { position:absolute; left:0; right:0; bottom:-1px; width:100%; height:48px; z-index:3; }
-  .float { position:absolute; z-index:0; font-size:1.7rem; opacity:.45; animation:bob 5s ease-in-out infinite alternate; user-select:none; }
-  @keyframes bob { from { transform:translateY(0) rotate(-6deg); } to { transform:translateY(-12px) rotate(8deg); } }
-  .emojis { position:relative; z-index:2; font-size:1.7rem; letter-spacing:8px; margin-top:12px; cursor:pointer; user-select:none; }
-  .rain { position:fixed; top:-30px; z-index:60; font-size:1.8rem; pointer-events:none; animation:fall 2.2s ease-in forwards; }
-  @keyframes fall { to { transform:translateY(110vh) rotate(360deg); opacity:.8; } }
+  /* Header */
+  header.hero { position:relative; overflow:hidden; color:#fff; text-align:center; background:linear-gradient(180deg,#0b7f8c 0%,#19a3a6 58%,#6fd0c4 100%); padding-top:calc(env(safe-area-inset-top) + 28px); }
+  .hero .inner { padding:0 20px; }
+  .kicker { font-size:.78rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; opacity:.9; }
+  .hero h1 { margin:6px 0 4px; font-size:clamp(2rem,8vw,2.9rem); letter-spacing:-.5px; line-height:1.05; }
+  .where { margin:0; opacity:.95; font-size:.92rem; }
+  .pill { display:inline-block; margin-top:14px; padding:6px 14px; border-radius:99px; background:#ffffff2e; border:1px solid #ffffff55; font-weight:800; font-size:.85rem; }
+  .scene { position:relative; height:112px; margin-top:6px; }
+  .sunball { position:absolute; right:24%; bottom:38px; width:56px; height:56px; border-radius:50%; background:radial-gradient(circle,#fff3b0 0%,#ffd166 65%,#ffd16600 72%); }
+  .palm { position:absolute; bottom:16px; width:96px; z-index:2; transform-origin:50% 100%; animation:sway 6s ease-in-out infinite alternate; }
+  .palm.l { left:4%; }
+  .palm.r { right:4%; width:84px; animation-delay:-3s; transform:scaleX(-1); }
+  @keyframes sway { from { rotate:-2deg; } to { rotate:2deg; } }
+  .glass { position:absolute; left:50%; bottom:14px; width:44px; margin-left:-22px; z-index:2; }
+  .wave { position:absolute; left:0; right:0; bottom:-1px; width:100%; height:34px; z-index:1; }
 
-  /* Navegación pegajosa (glass) */
-  .nav { position:sticky; top:0; z-index:30; background:#fff6e3b8; backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4); border-bottom:1px solid #ffffffaa; padding-top:env(safe-area-inset-top); box-shadow:0 6px 20px rgba(255,140,60,.15); }
+  /* Navegación */
+  .nav { position:sticky; top:0; z-index:30; background:#f3f8f9e6; backdrop-filter:blur(14px) saturate(1.3); -webkit-backdrop-filter:blur(14px) saturate(1.3); border-bottom:1px solid var(--line); padding-top:env(safe-area-inset-top); }
   .nav .row { display:flex; gap:8px; overflow-x:auto; padding:8px 12px; scrollbar-width:none; }
   .nav .row::-webkit-scrollbar { display:none; }
-  .chipnav { flex:none; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:99px; background:#fff; border:1px solid var(--line); color:var(--ink); font-weight:800; font-size:.85rem; text-decoration:none; transition:transform .15s, background .15s; }
-  .chipnav:active { transform:scale(.94); }
-  .chipnav.on { background:linear-gradient(135deg,var(--coral),var(--pink)); color:#fff; border-color:transparent; }
-  .chipnav small { font-weight:600; opacity:.75; }
+  .chipnav { flex:none; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:99px; background:#fff; border:1px solid var(--line); color:var(--ink); font-weight:700; font-size:.85rem; text-decoration:none; transition:transform .15s; }
+  .chipnav:active { transform:scale(.95); }
+  .chipnav.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+  .chipnav small { font-weight:600; opacity:.7; }
 
-  main { max-width:880px; margin:0 auto; padding:6px 14px 130px; }
+  main { max-width:880px; margin:0 auto; padding:4px 14px 150px; }
   section { scroll-margin-top:118px; }
-  h2 { margin:30px 0 12px; font-size:1.25rem; display:inline-block; padding:6px 16px; border-radius:99px; background:linear-gradient(90deg,var(--sun),#ffb199); color:#5b2a00; box-shadow:0 4px 0 rgba(255,107,74,.35); scroll-margin-top:118px; }
-  .card { background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #ffffffcc; border-radius:24px; padding:16px 18px; margin-bottom:14px; box-shadow:0 10px 26px rgba(255,120,60,.13); }
+  h2 { margin:30px 0 12px; font-size:1.2rem; padding-left:12px; border-left:5px solid var(--brand); color:var(--ink); scroll-margin-top:118px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px 18px; margin-bottom:14px; box-shadow:0 2px 10px rgba(20,50,59,.05); }
 
-  /* Hoy en Porto (bento) */
+  /* Hoy en Porto */
   .bento { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-  .tile { border-radius:22px; padding:14px; color:#fff; min-height:104px; position:relative; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,.12); transition:transform .15s; }
-  .tile:active { transform:scale(.97); }
-  .tile .big { font-size:1.9rem; font-weight:900; line-height:1.05; }
-  .tile .lab { font-size:.78rem; font-weight:800; opacity:.9; text-transform:uppercase; letter-spacing:.4px; }
-  .tile .sub { font-size:.8rem; opacity:.95; margin-top:4px; }
-  .tile .em { position:absolute; right:10px; top:6px; font-size:2.1rem; opacity:.95; }
-  .t-now { grid-column:1 / -1; background:linear-gradient(135deg,#ff9d4d,#ff4f9a); }
-  .t-water { background:linear-gradient(135deg,#00b4c5,#2a7de1); }
-  .t-wave { background:linear-gradient(135deg,#2a7de1,#6a5ae0); }
-  .t-uv { background:linear-gradient(135deg,#ffb100,#ff6b4a); }
-  .t-sun { background:linear-gradient(135deg,#ff6b4a,#c2185b); }
-  .t-tide { grid-column:1 / -1; background:linear-gradient(135deg,#1fb56b,#00b4c5); }
+  .tile { border-radius:18px; padding:14px; min-height:100px; position:relative; background:#fff; border:1px solid var(--line); box-shadow:0 2px 10px rgba(20,50,59,.05); }
+  .tile .big { font-size:1.8rem; font-weight:900; line-height:1.05; color:var(--brand-d); }
+  .tile .lab { font-size:.74rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+  .tile .sub { font-size:.8rem; color:var(--muted); margin-top:4px; }
+  .tile .em { position:absolute; right:12px; top:8px; font-size:1.8rem; }
+  .t-now { grid-column:1 / -1; background:linear-gradient(135deg,var(--brand),var(--brand-d)); border-color:transparent; }
+  .t-now .big, .t-now .lab, .t-now .sub { color:#fff; }
+  .t-now .lab, .t-now .sub { opacity:.9; }
+  .t-tide { grid-column:1 / -1; }
   .refresh { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:10px 2px 0; font-size:.8rem; color:var(--muted); }
-  .refresh button { appearance:none; border:0; border-radius:99px; padding:8px 14px; font-weight:800; background:#fff; border:1px solid var(--line); color:var(--ink); cursor:pointer; }
-  .refresh button:active { transform:scale(.94); }
+  .refresh button { appearance:none; border-radius:99px; padding:8px 14px; font-weight:800; background:#fff; border:1px solid var(--line); color:var(--ink); cursor:pointer; }
+  .refresh button:active { transform:scale(.95); }
   .spin { animation:rot .8s linear infinite; display:inline-block; }
   @keyframes rot { to { transform:rotate(360deg); } }
 
@@ -70,72 +65,74 @@
   .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:8px 0; border-bottom:1px dashed var(--line); }
   .flight small { grid-column:2 / 4; color:var(--muted); }
   .flight:last-child { border-bottom:0; }
-  .hl { background:#fff0b3; color:#7a4b00; font-weight:800; padding:2px 10px; border-radius:99px; white-space:nowrap; }
-  .k { display:inline-block; background:#d9f6f9; color:#06626d; padding:2px 10px; border-radius:99px; margin:2px 6px 2px 0; font-size:.9rem; font-weight:700; }
-  .k.na { background:#eef1f4; color:var(--muted); font-weight:500; }
-  .pending { color:#b26a00; }
+  .hl { background:#fff2cc; color:#6b4600; font-weight:800; padding:2px 10px; border-radius:99px; white-space:nowrap; }
+  .k { display:inline-block; background:#e3f3f5; color:var(--brand-d); padding:2px 10px; border-radius:99px; margin:2px 6px 2px 0; font-size:.88rem; font-weight:700; }
+  .k.na { background:#eef1f3; color:var(--muted); font-weight:500; }
+  .pending { color:#a35f00; }
 
   /* Botones */
-  .btn { appearance:none; border:0; border-radius:16px; padding:12px 16px; font-size:1rem; font-weight:800; background:linear-gradient(135deg,var(--coral),var(--pink)); color:#fff; cursor:pointer; min-height:46px; box-shadow:0 6px 14px rgba(255,79,154,.3); transition:transform .12s; }
-  .btn:active { transform:scale(.96); }
-  .btn.sec { background:#eef1f4; color:var(--ink); box-shadow:none; }
-  .btn.big { width:100%; padding:16px; font-size:1.05rem; }
+  .btn { appearance:none; border:0; border-radius:14px; padding:12px 16px; font-size:1rem; font-weight:800; background:var(--brand); color:#fff; cursor:pointer; min-height:46px; transition:transform .12s; }
+  .btn:active { transform:scale(.97); }
+  .btn.sec { background:#e7eff1; color:var(--ink); }
+  .btn.big { width:100%; padding:15px; font-size:1.02rem; }
 
-  /* Días (acordeón) */
-  details.day { background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-radius:24px; margin-bottom:12px; border:1px solid #ffffffcc; box-shadow:0 10px 26px rgba(255,120,60,.13); border-left:8px solid var(--coral); overflow:hidden; scroll-margin-top:118px; }
-  details.day.c1 { border-left-color:var(--teal); }
-  details.day.c2 { border-left-color:var(--pink); }
-  details.day.today { box-shadow:0 0 0 3px var(--sun), 0 10px 26px rgba(255,120,60,.2); }
-  details.day summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 14px; min-height:64px; }
+  /* Días */
+  details.day { background:var(--card); border-radius:20px; margin-bottom:12px; border:1px solid var(--line); border-left:6px solid var(--brand); box-shadow:0 2px 10px rgba(20,50,59,.05); overflow:hidden; scroll-margin-top:118px; }
+  details.day.today { border-color:var(--sun); border-left-color:var(--warm); box-shadow:0 0 0 2px var(--sun); }
+  details.day summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px; min-height:64px; }
   details.day summary::-webkit-details-marker { display:none; }
-  .date { flex:none; width:58px; height:58px; padding-top:9px; text-align:center; color:#fff; font-weight:900; font-size:1rem; line-height:1.1; border-radius:50%; background:linear-gradient(135deg,var(--coral),var(--pink)); box-shadow:0 4px 10px rgba(255,79,154,.35); }
-  .date small { display:block; font-weight:700; opacity:.95; font-size:.72rem; }
+  .date { flex:none; width:54px; height:54px; padding-top:8px; text-align:center; color:#fff; font-weight:900; font-size:1rem; line-height:1.1; border-radius:50%; background:var(--brand); }
+  details.day.today .date { background:var(--warm); }
+  .date small { display:block; font-weight:700; opacity:.9; font-size:.7rem; }
   .sm { flex:1; min-width:0; }
-  .sm h3 { margin:0; font-size:1.05rem; }
+  .sm h3 { margin:0; font-size:1.02rem; }
   .meta { font-size:.8rem; color:var(--muted); margin-top:2px; }
-  .chev { flex:none; font-size:1.2rem; transition:transform .2s; color:var(--coral); }
+  .chev { flex:none; font-size:1.1rem; transition:transform .2s; color:var(--muted); }
   details[open] .chev { transform:rotate(180deg); }
   .dbody { padding:0 16px 16px; }
-  .tag { display:inline-block; font-size:.72rem; font-weight:800; padding:2px 10px; border-radius:99px; background:#d4f7e8; color:#0b7a5a; margin-right:6px; }
-  .tag.free { background:#ffe0ec; color:#b02a66; }
-  label.opt { display:flex; align-items:flex-start; gap:10px; cursor:pointer; margin-top:10px; padding:10px 12px; border-radius:16px; background:#fff7e6; border:1px dashed #ffc98a; }
-  label.opt input { margin-top:3px; width:22px; height:22px; accent-color:var(--coral); }
+  .tag { display:inline-block; font-size:.72rem; font-weight:800; padding:2px 10px; border-radius:99px; background:#e0f3ea; color:#0b6f4c; margin-right:6px; }
+  .tag.free { background:#eef1f3; color:var(--muted); }
+  label.opt { display:flex; align-items:flex-start; gap:10px; cursor:pointer; margin-top:10px; padding:10px 12px; border-radius:14px; background:#f3f8f9; border:1px solid var(--line); }
+  label.opt input { margin-top:3px; width:22px; height:22px; accent-color:var(--brand); }
   select { margin-top:8px; padding:10px; border-radius:12px; border:1px solid var(--line); max-width:100%; font-size:.95rem; background:#fff; }
   .price { font-weight:900; color:var(--ok); white-space:nowrap; }
-  .wx { font-size:.85rem; color:#7a4b00; background:#fff0b3; border-radius:14px; padding:8px 12px; margin:10px 0 6px; }
-  .tide { font-size:.85rem; color:#06626d; background:#d3f5f8; border-radius:14px; padding:8px 12px; margin:6px 0; }
+  .wx { font-size:.85rem; color:#6b4600; background:#fff6dd; border-radius:12px; padding:8px 12px; margin:10px 0 6px; }
+  .tide { font-size:.85rem; color:var(--brand-d); background:#e6f4f6; border-radius:12px; padding:8px 12px; margin:6px 0; }
   .hours { display:flex; gap:6px; overflow-x:auto; margin:6px 0; padding-bottom:2px; }
-  .hr { flex:1 0 58px; text-align:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:6px 4px; font-size:.75rem; }
+  .hr { flex:1 0 58px; text-align:center; background:#fff; border:1px solid var(--line); border-radius:12px; padding:6px 4px; font-size:.75rem; }
   .hr b { display:block; font-size:.78rem; }
   .hr .e { font-size:1.2rem; }
-  .tl2 { margin-top:10px; border-left:3px dashed var(--sun); padding-left:12px; }
+  .tl2 { margin-top:10px; border-left:2px solid var(--line); padding-left:12px; }
   .blk { display:flex; gap:10px; padding:7px 0; font-size:.93rem; }
-  .bt { min-width:52px; font-weight:900; color:var(--coral); }
+  .bt { min-width:52px; font-weight:900; color:var(--brand-d); }
   .blk .bx { flex:1; }
-  .mealtag { display:inline-block; background:#ffe0ec; color:#a3235f; font-size:.78rem; font-weight:800; padding:1px 8px; border-radius:99px; }
+  .mealtag { display:inline-block; background:#fdebe4; color:#a2431f; font-size:.76rem; font-weight:800; padding:1px 8px; border-radius:99px; }
   .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
-  .chip { display:inline-flex; align-items:center; border:1px solid #ffd2a8; border-radius:99px; overflow:hidden; font-size:.82rem; background:#fff; }
+  .chip { display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:99px; overflow:hidden; font-size:.82rem; background:#fff; }
   .chip a { padding:7px 11px; text-decoration:none; color:var(--ink); }
-  .chip .cp { appearance:none; border:0; border-left:1px solid #ffd2a8; background:#fff0e0; padding:7px 11px; font-size:.78rem; font-weight:800; cursor:pointer; color:var(--coral); }
+  .chip .cp { appearance:none; border:0; border-left:1px solid var(--line); background:#f3f8f9; padding:7px 11px; font-size:.78rem; font-weight:800; cursor:pointer; color:var(--brand-d); }
 
   /* Tablas */
-  table { width:100%; border-collapse:collapse; font-size:.95rem; }
+  table { width:100%; border-collapse:collapse; font-size:.93rem; }
   td { padding:7px 0; border-bottom:1px solid var(--line); }
-  td:last-child { text-align:right; }
+  #summary th { text-align:right; font-size:.72rem; color:var(--muted); padding:4px 0; border-bottom:2px solid var(--line); text-transform:uppercase; }
+  #summary th:first-child { text-align:left; }
+  #summary td:not(:first-child) { text-align:right; white-space:nowrap; padding-left:8px; }
   table.grid { font-size:.85rem; }
   table.grid th { text-align:left; font-size:.72rem; color:var(--muted); padding:4px 6px 4px 0; border-bottom:2px solid var(--line); text-transform:uppercase; letter-spacing:.3px; }
   table.grid td { padding:7px 6px 7px 0; text-align:left; vertical-align:top; }
   table.dur td:first-child { font-weight:700; }
   .src { font-size:.78rem; color:var(--muted); }
 
-  /* Barra de total */
-  .total { position:fixed; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); max-width:860px; margin:0 auto; z-index:40; display:flex; justify-content:space-around; gap:10px; flex-wrap:wrap; padding:10px 16px; border-radius:22px; color:#fff; font-size:.82rem; font-weight:700; background:linear-gradient(135deg,#00b4c5cc,#1fb56bcc); backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4); border:1px solid #ffffff88; box-shadow:0 10px 26px rgba(0,0,0,.2); }
-  .total strong { display:block; font-size:1.05rem; }
-  .toast { position:fixed; left:50%; bottom:100px; transform:translateX(-50%); background:#12303b; color:#fff; padding:8px 16px; border-radius:99px; font-weight:700; z-index:70; font-size:.85rem; }
+  /* Barra inferior */
+  .total { position:fixed; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); max-width:860px; margin:0 auto; z-index:40; display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; padding:10px 16px; border-radius:20px; color:#fff; background:#14323bf2; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 10px 26px rgba(0,0,0,.22); }
+  .total span { display:block; font-size:.68rem; opacity:.75; text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
+  .total strong { display:block; font-size:1rem; }
+  .toast { position:fixed; left:50%; bottom:130px; transform:translateX(-50%); background:#14323b; color:#fff; padding:8px 16px; border-radius:99px; font-weight:700; z-index:70; font-size:.85rem; }
 
-  @media (min-width:700px) { .bento { grid-template-columns:repeat(4,1fr); } .t-now { grid-column:span 2; } .t-tide { grid-column:span 2; } }
+  @media (min-width:700px) { .bento { grid-template-columns:repeat(4,1fr); } .t-now, .t-tide { grid-column:span 2; } .total { grid-template-columns:repeat(4,1fr); } }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
-﻿  #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
+  #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
   #viewer.on { display:flex; }
   #viewer .top { display:flex; align-items:center; background:#fff; padding-top:env(safe-area-inset-top); border-bottom:1px solid #e3e3ea; }
   #viewer .arrow { appearance:none; border:0; background:none; font-size:1.6rem; padding:10px 14px; color:#1c0f5a; cursor:pointer; }
@@ -186,6 +183,7 @@
   table.grid td:last-child { text-align:left; }
   .scroll { overflow-x:auto; }
 
+
 </style>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -193,22 +191,30 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Porto">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0a8fb5">
+<meta name="theme-color" content="#0b7f8c">
 </head>
 <body>
 <header class="hero">
-  <div class="sun"></div>
-  <span class="float" style="left:4%;top:150px;animation-delay:-1s">🥥</span>
-  <span class="float" style="right:5%;top:150px;animation-delay:-3s">🍹</span>
-  <span class="float" style="left:50%;top:24px;animation-delay:-2s">🍍</span>
-  <svg class="palm l" viewBox="0 0 100 150" aria-hidden="true"><use href="#palmsym"/></svg>
-  <svg class="palm r" viewBox="0 0 100 150" aria-hidden="true"><use href="#palmsym"/></svg>
-  <h1>¡Porto de Galinhas! 🌴</h1>
-  <p>20/11/2026 al 28/11/2026 · vacaciones de a dos 💕</p>
-  <p>Ora Beach Residence · R. Angelim · Ipojuca, PE</p>
-  <div class="pill" id="daybadge">☀️ Cuenta regresiva…</div>
-  <div class="emojis" id="emojiRain" title="Tocá para festejar">☀️ 🍹 🏖️ 🥥 🌊</div>
-  <svg class="wave" viewBox="0 0 1200 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 24 C150 52 300 -6 450 24 C600 52 750 -6 900 24 C1050 52 1150 8 1200 22 L1200 48 L0 48Z" fill="#fff6e3"/></svg>
+  <div class="inner">
+    <div class="kicker">20 al 28 de noviembre de 2026</div>
+    <h1>Porto de Galinhas</h1>
+    <p class="where">Ora Beach Residence · R. Angelim, Ipojuca, PE</p>
+    <div class="pill" id="daybadge">Cargando…</div>
+  </div>
+  <div class="scene" aria-hidden="true">
+    <div class="sunball"></div>
+    <svg class="palm l" viewBox="0 0 100 150"><use href="#palmsym"/></svg>
+    <svg class="glass" viewBox="0 0 60 80">
+      <path d="M8 12 H52 L30 46 Z" fill="#ffffffcc" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M14 18 H46 L30 42 Z" fill="#ff8a5b"/>
+      <path d="M30 46 V66" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M20 68 H40" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M38 3 L30 30" stroke="#ff4f6d" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="51" cy="12" r="6" fill="#7bd36b"/>
+    </svg>
+    <svg class="palm r" viewBox="0 0 100 150"><use href="#palmsym"/></svg>
+    <svg class="wave" viewBox="0 0 1200 34" preserveAspectRatio="none"><path d="M0 16 C150 40 300 -4 450 16 C600 40 750 -4 900 16 C1050 40 1150 6 1200 14 L1200 34 L0 34Z" fill="#f3f8f9"/></svg>
+  </div>
 </header>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -310,7 +316,7 @@
   <h2 id="resumen">💰 Resumen</h2>
   <div class="card">
     <table id="summary"></table>
-    <p class="note">No incluye comidas, propinas, transfer aeropuerto ni el alojamiento.</p>
+    <p class="note">Incluye excursiones y el transfer al aeropuerto de Recife (ida y vuelta, R$ 320). No incluye comidas, propinas ni alojamiento.</p>
     <h3 style="margin:14px 0 6px;font-size:1rem">💵 Precio en pesos (pagando con PIX)</h3>
     <div id="fx"></div>
     <p class="note" id="fxNote"></p>
@@ -325,10 +331,11 @@
 <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff0b3cc,#ffd0e0cc)"><div style="font-size:2rem;letter-spacing:8px">🍹🌴☀️🥥🍍</div><b>¡Buen viaje y a disfrutar!</b><div class="note">Hecho con cariño para unas vacaciones de película.</div></div>
 </main>
 
-<div class="total">
-  <span>Total 2 personas: <strong id="totalBRL">R$ 0</strong></span>
-  <span>Por persona: <strong id="perPerson">R$ 0</strong></span>
-  <span>En pesos (Cocos): <strong id="arsBar">-</strong></span>
+<div class="total" id="bar">
+  <div><span>Total en reales</span><strong id="totalBRL">R$ 0</strong></div>
+  <div><span>Cotización del día (Cocos)</span><strong id="rateBar">-</strong></div>
+  <div><span>Total en pesos</span><strong id="arsBar">-</strong></div>
+  <div><span>Clima ahora</span><strong id="wxBar">-</strong></div>
 </div>
 
 <div id="viewer">
@@ -375,13 +382,14 @@ const PLACES = {
 };
 
 const days = [
-  { date:'20/11', dow:'Vie', title:'Viaje y llegada', items:[],
+  { date:'20/11', dow:'Vie', title:'Viaje y llegada',
+    items:[{ id:'transfer', name:'Transfer Recife ↔ hotel (ida y vuelta)', price:320, perPerson:false, transport:true }],
     tide:'Marea baja 06:34 y 18:49 (el día de viaje no la usás).',
     blocks:[
       { t:'11:35', txt:'Embarque en Córdoba (vuelo LA8049 sale 12:25).' },
       { t:'15:25', txt:'Llegada a São Paulo (GRU). Escala de 3 h 10 min.', meal:'Almuerzo/merienda en el aeropuerto.' },
       { t:'18:35', txt:'Vuelo a Brasilia (LA3529, llega 20:20). Escala de 1 h.', meal:'Cena liviana en el vuelo o en el aeropuerto.' },
-      { t:'23:55', txt:'Llegada a Recife (LA3496). Traslado al hotel, aprox. 1 h por ruta (transfer privado).', places:['aeropuerto','hotel'] },
+      { t:'23:55', txt:'Llegada a Recife (LA3496). Traslado al hotel, aprox. 1 h por ruta (transfer privado, ida y vuelta R$ 320).', places:['aeropuerto','hotel'] },
       { t:'~01:00', txt:'Check-in y descanso.' }
     ]},
   { date:'21/11', dow:'Sáb', title:'Buggy Ponta a Ponta', 
@@ -475,7 +483,7 @@ const days = [
       { t:'08:30', txt:'Desayuno y armado de valijas.', meal:'Desayuno' },
       { t:'09:30', txt:'Última mañana de playa frente al departamento.', places:['hotel'] },
       { t:'12:00', txt:'Almuerzo cerca del hotel. Consultar el horario de check-out del departamento.', meal:'Almuerzo', places:['barcaxeira'] },
-      { t:'14:00', txt:'Salida al aeropuerto de Recife (aprox. 1 h por ruta).', places:['aeropuerto'] },
+      { t:'14:00', txt:'Salida al aeropuerto de Recife (aprox. 1 h por ruta). Transfer de vuelta incluido en el total.', places:['aeropuerto'] },
       { t:'15:15', txt:'Llegada al aeropuerto, 3 h antes del vuelo.' },
       { t:'18:15', txt:'Vuelo G3 7618 a Córdoba, llega 00:05 del 29/11.', meal:'Cena en el aeropuerto antes de embarcar.' }
     ]}
@@ -525,17 +533,17 @@ function render() {
   const todayK = tripToday();
   let all = '';
   days.forEach((d, idx) => {
-    const active = d.items.filter(i => isOn(i.id));
-    const free = d.items.length > 0 && active.length === 0;
+    const exc = d.items.filter(i => !i.transport);
+    const free = exc.length > 0 && exc.every(i => !isOn(i.id));
     const w = WX[DKEY(d)];
-    const meta = [w ? WMO(w.code)[0] + ' ' + w.tmax + '°' : '', d.items.length === 0 ? 'sin excursión' : free ? 'día libre' : 'excursión'].filter(Boolean).join(' · ');
+    const meta = [w ? WMO(w.code)[0] + ' ' + w.tmax + '°' : '', exc.length === 0 ? 'sin excursión' : free ? 'día libre' : 'excursión'].filter(Boolean).join(' · ');
     let html = '<details class="day c' + (idx % 3) + (todayK === DKEY(d) ? ' today' : '') + '" id="' + dayId(d) + '"' + (openDays.has(dayId(d)) ? ' open' : '') + '>';
     html += '<summary><div class="date">' + d.date.slice(0, 2) + '<small>' + d.dow + '</small></div><div class="sm"><h3>' + (free ? 'Día libre' : d.title) + '</h3><div class="meta">' + meta + '</div></div><span class="chev">▾</span></summary><div class="dbody">';
-    html += '<span class="tag ' + ((d.items.length === 0 || free) ? 'free' : '') + '">' + (d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión') + '</span>';
+    html += '<span class="tag ' + ((exc.length === 0 || free) ? 'free' : '') + '">' + (exc.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión') + '</span>';
     html += wxLine(d) + hourStrip(d) + tideLine(d);
     d.items.forEach(i => {
       const price = itemPrice(i);
-      html += '<label class="opt"><input type="checkbox" data-id="' + i.id + '" ' + (isOn(i.id) ? 'checked' : '') + '><span>' + i.name + ' <span class="price">' + fmt(price) + (i.perPerson ? ' (2 pers.)' : ' (vehículo)') + '</span></span></label>';
+      html += '<label class="opt"><input type="checkbox" data-id="' + i.id + '" ' + (isOn(i.id) ? 'checked' : '') + '><span>' + i.name + ' <span class="price">' + fmt(price) + (i.transport ? ' (ida y vuelta)' : i.perPerson ? ' (2 pers.)' : ' (vehículo)') + '</span></span></label>';
       if (i.options) {
         html += '<select data-opt="' + i.id + '">' + i.options.map((o, k) => '<option value="' + k + '" ' + ((state['opt_' + i.id] || 0) == k ? 'selected' : '') + '>' + o.label + ' · R$ ' + o.price + ' p/p</option>').join('') + '</select>';
       }
@@ -577,19 +585,22 @@ function itemPrice(i) { return unit(i) * (i.perPerson ? PEOPLE : 1); }
 let total = 0;
 function summary() {
   total = 0;
-  let rows = '';
+  const rate = FX.cocos.rate;
+  let rows = '<tr><th>Concepto</th><th>R$</th><th>Pesos (Cocos)</th></tr>', exc = 0, trn = 0;
   days.flatMap(d => d.items.map(i => ({ d, i }))).forEach(({ d, i }) => {
     if (!isOn(i.id)) return;
     const p = itemPrice(i);
     total += p;
-    const name = i.options ? i.options[state['opt_'+i.id] || 0].label : i.name;
-    rows += `<tr><td>${d.date} · ${name}</td><td>${fmt(p)}</td></tr>`;
+    if (i.transport) trn += p; else exc += p;
+    const name = i.options ? i.options[state['opt_' + i.id] || 0].label : i.name;
+    rows += '<tr><td>' + d.date + ' · ' + name + '</td><td>' + fmt(p) + '</td><td>' + ars(p * rate) + '</td></tr>';
   });
-  if (!rows) rows = '<tr><td>Sin excursiones seleccionadas</td><td>R$ 0,00</td></tr>';
-  rows += `<tr><td><b>Total (2 personas)</b></td><td><b>${fmt(total)}</b></td></tr>`;
+  rows += '<tr><td><b>Excursiones</b></td><td><b>' + fmt(exc) + '</b></td><td><b>' + ars(exc * rate) + '</b></td></tr>';
+  rows += '<tr><td><b>Transfer aeropuerto</b></td><td><b>' + fmt(trn) + '</b></td><td><b>' + ars(trn * rate) + '</b></td></tr>';
+  rows += '<tr><td><b>Total (2 personas)</b></td><td><b>' + fmt(total) + '</b></td><td><b>' + ars(total * rate) + '</b></td></tr>';
+  rows += '<tr><td>Por persona</td><td>' + fmt(total / PEOPLE) + '</td><td>' + ars(total / PEOPLE * rate) + '</td></tr>';
   document.getElementById('summary').innerHTML = rows;
   document.getElementById('totalBRL').textContent = fmt(total);
-  document.getElementById('perPerson').textContent = fmt(total / PEOPLE);
   convert();
 }
 
@@ -703,8 +714,18 @@ function updateStamp() {
   s.textContent = 'Clima y mareas actualizados ' + (mins < 1 ? 'recién' : 'hace ' + mins + ' min') + ' · se refresca solo cada 15 min';
 }
 
+function updateBar() {
+  const el = document.getElementById('wxBar'); if (!el) return;
+  if (CUR) {
+    const water = MAR && MAR.sea_surface_temperature != null ? ' · agua ' + Math.round(MAR.sea_surface_temperature) + '°' : '';
+    el.textContent = WMO(CUR.weather_code)[0] + ' ' + Math.round(CUR.temperature_2m) + '°' + water;
+  } else {
+    const w = WX[recifeToday()] || WX['2026-11-20'];
+    el.textContent = w ? WMO(w.code)[0] + ' ' + w.tmin + '° a ' + w.tmax + '°' : '-';
+  }
+}
 function applyLive() {
-  renderToday(); renderWxTables(); render(); updateStamp(); updateBadge();
+  renderToday(); renderWxTables(); render(); updateStamp(); updateBadge(); updateBar();
 }
 
 async function refreshLive() {
@@ -772,6 +793,7 @@ function convert() {
   h += `<p class="note">Con Cocos pagás ${ars(Math.abs(diff))} ${diff >= 0 ? 'menos' : 'más'} que con Mercado Pago por este total.</p>`;
   wrap.innerHTML = h;
   document.getElementById('arsBar').textContent = ars(total * FX.cocos.rate);
+  document.getElementById('rateBar').textContent = arsRate(FX.cocos.rate) + ' por R$ 1';
   const at = new Date(FX.cocos.at).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
   document.getElementById('fxNote').textContent = (FX.live ? 'Cotización de ComparaPix de las ' : 'Última cotización guardada, de las ') + at + '. Es el precio de compra de reales por PIX, se refresca cada ~30 min y cambia durante el día. No incluye comisiones ni impuestos que cobre cada app. Para pagar por PIX hace falta la clave o el QR del proveedor.';
 }
