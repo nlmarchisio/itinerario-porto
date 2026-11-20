@@ -253,7 +253,7 @@
     <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span class="hl">Embarque 11:35</span><small><b class="k">Terminal 1</b> <b class="k">Puerta 3</b> <b class="k">Grupo 5</b></small></div>
     <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span class="hl">Embarque 17:45</span><small><b class="k">Terminal 2</b> <b class="k na">Puerta sin asignar</b> <b class="k">Grupo 4</b></small></div>
     <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span class="hl">Embarque 20:30</span><small><b class="k na">Terminal sin asignar</b> <b class="k">Puerta 19</b> <b class="k">Grupo 5</b></small></div>
-    <p class="note">Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
+    <p class="note">Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado.</p>
   </div>
 
   <h2 id="tarjetas">🎫 Tarjetas de embarque</h2>
@@ -269,7 +269,7 @@
   </div>
 
   <h2 id="dias">🗓️ Itinerario por día</h2>
-  <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados por Diogo (<a href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">sitio</a>) en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
+  <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados en el <a href="#contacto">sitio de excursiones</a>, en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
   <div id="days"></div>
 
   <h2 id="clima">☀️ Clima y sol</h2>
@@ -294,7 +294,7 @@
       <tr><td>Ilha de Santo Aleixo</td><td>~7 h, ~5 h en la isla</td></tr>
       <tr><td>Maragogi com Catamarã</td><td>Día completo, 11-12 h con traslado (estimado)</td></tr>
     </table>
-    <p class="note">Los tiempos de buggy, buceo y Santo Aleixo salen del sitio de Diogo y de GetYourGuide. Maragogi queda a 85-90 km (entre 1 h 20 y 2 h de viaje por tramo) y el regreso suele ser antes de las 16:00. Carneiros está a 50-60 km (cerca de 1 h). Las horas exactas las define Diogo según la marea.</p>
+    <p class="note">Los tiempos de buggy, buceo y Santo Aleixo salen del sitio de excursiones y de GetYourGuide. Maragogi queda a 85-90 km (entre 1 h 20 y 2 h de viaje por tramo) y el regreso suele ser antes de las 16:00. Carneiros está a 50-60 km (cerca de 1 h). Las horas exactas dependen de la marea.</p>
   </div>
 
   <h2 id="playas">🏖️ Playas de aguas tranquilas</h2>
@@ -318,7 +318,9 @@
 
   <h2 id="contacto">📞 Contacto</h2>
   <div class="card">
-    <a href="https://wa.me/5581997148594?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20valores%20e%20disponibilidade%20dos%20passeios%20em%20Porto%20de%20Galinhas." target="_blank" rel="noopener">Diogo Ferreira · WhatsApp +55 81 99714-8594</a>
+    <p style="margin:0 0 10px">Excursiones, transfer y reservas:</p>
+    <a class="btn big" style="display:block;text-align:center;text-decoration:none;margin-bottom:10px" href="https://wa.me/5581997148594?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20valores%20e%20disponibilidade%20dos%20passeios%20em%20Porto%20de%20Galinhas." target="_blank" rel="noopener">💬 WhatsApp +55 81 99714-8594</a>
+    <a class="btn big sec" style="display:block;text-align:center;text-decoration:none" href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">🌐 Ver excursiones y precios</a>
   </div>
 <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff0b3cc,#ffd0e0cc)"><div style="font-size:2rem;letter-spacing:8px">🍹🌴☀️🥥🍍</div><b>¡Buen viaje y a disfrutar!</b><div class="note">Hecho con cariño para unas vacaciones de película.</div></div>
 </main>
@@ -348,7 +350,7 @@
 const PEOPLE = 2;
 const fmt = n => 'R$ ' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-// perPerson=true multiplica por PEOPLE. Los precios salen de https://diogopasseios.lovable.app/
+// perPerson=true multiplica por PEOPLE.
 // Puntos GPS: coordenadas de OpenStreetMap (referenciales, verificar en el mapa). Sin lat/lng se busca por nombre.
 const PLACES = {
   hotel:     { n:'Ora Beach Residence (hotel)', q:'Ora Beach Residence, R. Angelim, Porto de Galinhas, Ipojuca, PE' },
@@ -379,7 +381,7 @@ const days = [
       { t:'11:35', txt:'Embarque en Córdoba (vuelo LA8049 sale 12:25).' },
       { t:'15:25', txt:'Llegada a São Paulo (GRU). Escala de 3 h 10 min.', meal:'Almuerzo/merienda en el aeropuerto.' },
       { t:'18:35', txt:'Vuelo a Brasilia (LA3529, llega 20:20). Escala de 1 h.', meal:'Cena liviana en el vuelo o en el aeropuerto.' },
-      { t:'23:55', txt:'Llegada a Recife (LA3496). Traslado al hotel, aprox. 1 h por ruta (transfer privado con Diogo).', places:['aeropuerto','hotel'] },
+      { t:'23:55', txt:'Llegada a Recife (LA3496). Traslado al hotel, aprox. 1 h por ruta (transfer privado).', places:['aeropuerto','hotel'] },
       { t:'~01:00', txt:'Check-in y descanso.' }
     ]},
   { date:'21/11', dow:'Sáb', title:'Buggy Ponta a Ponta', 
@@ -399,7 +401,7 @@ const days = [
     tide:'Marea baja 07:59 (0,31 m). Piscinas visibles 06:29 a 09:29. El buceo conviene en esa ventana.',
     blocks:[
       { t:'06:45', txt:'Desayuno liviano (fruta, café).', meal:'Desayuno' },
-      { t:'07:30', txt:'Mergulho com Cilindro en las piscinas naturales: unos 60 min con clase, travesía en jangada y 15-20 min de buceo. Confirmar horario exacto con Diogo según la marea.', ex:'mergulho', places:['piscinas'] },
+      { t:'07:30', txt:'Mergulho com Cilindro en las piscinas naturales: unos 60 min con clase, travesía en jangada y 15-20 min de buceo. El horario exacto depende de la marea.', ex:'mergulho', places:['piscinas'] },
       { t:'09:30', txt:'Segundo desayuno o brunch en La Crêperie (4,8 en Restaurant Guru).', meal:'Desayuno', places:['creperie'] },
       { t:'11:00', txt:'Playa de la Vila, frente al centrinho. Zona de mar más tranquila que la del hotel.', places:['praiaPdG'] },
       { t:'12:30', txt:'Almuerzo en Peixe na Telha, al lado de las piscinas naturales (R$ 150-200 por persona). Abre 10-16 h y 18:30-22 h.', meal:'Almuerzo', places:['peixeTelha'] },
@@ -416,7 +418,7 @@ const days = [
     tide:'Marea baja 08:42 (0,22 m). Buen día para el banco de arena.',
     blocks:[
       { t:'06:45', txt:'Desayuno en el apartamento.', meal:'Desayuno' },
-      { t:'~08:00', txt:'Salida del hotel (hora exacta la confirma Diogo). Viaje de unos 50-60 km, cerca de 1 h.', ex:'carneiros', places:['hotel'] },
+      { t:'~08:00', txt:'Salida del hotel (la hora exacta depende de la marea). Viaje de unos 50-60 km, cerca de 1 h.', ex:'carneiros', places:['hotel'] },
       { t:'09:30', txt:'Paseo en catamarán, banco de arena, baño de arcilla, Igrejinha São Benedito y day use. Llevar protector solar, agua y efectivo.', ex:'carneiros', places:['carneiros'] },
       { t:'13:00', txt:'Almuerzo en el day use (no incluido en el precio).', meal:'Almuerzo', ex:'carneiros' },
       { t:'~16:30', txt:'Regreso al hotel (estimado).', ex:'carneiros' },
@@ -449,7 +451,7 @@ const days = [
     tide:'Marea baja 10:57 (0,25 m). Piscinas visibles 09:27 a 12:27.',
     blocks:[
       { t:'08:30', txt:'Desayuno.', meal:'Desayuno' },
-      { t:'10:00', txt:'Opcional: jangada a las piscinas naturales de Porto de Galinhas (50 min a 2 h, sale de la Praça das Piscinas Naturais). Precio no consultado, preguntar a Diogo.', places:['piscinas'] },
+      { t:'10:00', txt:'Opcional: jangada a las piscinas naturales de Porto de Galinhas (50 min a 2 h, sale de la Praça das Piscinas Naturais). Precio a consultar en el contacto.', places:['piscinas'] },
       { t:'12:30', txt:'Almuerzo en Bar do Galo, a orillas del Rio Maracaípe (abre 9-17 h, 4,0 en Tripadvisor). Alternativa: Barcaxeira.', meal:'Almuerzo', places:['barGalo','barcaxeira'] },
       { t:'15:00', txt:'Pontal de Maracaípe: aguas bajas y calmas, y vivero natural de caballitos de mar. Caminata por la arena desde Maracaípe.', places:['pontalMar'] },
       { t:'18:00', txt:'Paseo y compras en el centrinho (R. Beijupirá y R. Esperança).' },
@@ -460,7 +462,7 @@ const days = [
     tide:'Marea baja estimada cerca de las 11:45 (la tabla publicada llega hasta el 26/11).',
     blocks:[
       { t:'07:15', txt:'Desayuno.', meal:'Desayuno' },
-      { t:'~08:30', txt:'Salida del hotel y traslado a Barra de Sirinhaém. Hora exacta la confirma Diogo.', ex:'aleixo', places:['hotel','sirinhaem'] },
+      { t:'~08:30', txt:'Salida del hotel y traslado a Barra de Sirinhaém. La hora exacta se confirma el día anterior.', ex:'aleixo', places:['hotel','sirinhaem'] },
       { t:'10:00', txt:'Travesía en lancha, trilha ecológica y tiempo libre en la isla, unas 5 horas allá.', ex:'aleixo' },
       { t:'13:00', txt:'Almuerzo en la isla o en la estructura de playa (consultar si está incluido).', meal:'Almuerzo', ex:'aleixo' },
       { t:'~16:00', txt:'Regreso al hotel (estimado, la excursión dura unas 7 horas).', ex:'aleixo' },
@@ -771,7 +773,7 @@ function convert() {
   wrap.innerHTML = h;
   document.getElementById('arsBar').textContent = ars(total * FX.cocos.rate);
   const at = new Date(FX.cocos.at).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
-  document.getElementById('fxNote').textContent = (FX.live ? 'Cotización de ComparaPix de las ' : 'Última cotización guardada, de las ') + at + '. Es el precio de compra de reales por PIX, se refresca cada ~30 min y cambia durante el día. No incluye comisiones ni impuestos que cobre cada app. Pedile a Diogo su clave o QR de PIX.';
+  document.getElementById('fxNote').textContent = (FX.live ? 'Cotización de ComparaPix de las ' : 'Última cotización guardada, de las ') + at + '. Es el precio de compra de reales por PIX, se refresca cada ~30 min y cambia durante el día. No incluye comisiones ni impuestos que cobre cada app. Para pagar por PIX hace falta la clave o el QR del proveedor.';
 }
 async function loadFx() {
   try { const c = JSON.parse(localStorage.getItem('fx') || 'null'); if (c) FX = Object.assign(FX, c, { live:false }); } catch (_) {}
