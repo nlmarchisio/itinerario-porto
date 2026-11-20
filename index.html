@@ -64,6 +64,22 @@
   @keyframes rot { to { transform:rotate(360deg); } }
 
   /* Vuelos */
+  .fl { padding:12px 0; border-bottom:1px dashed var(--line); }
+  .fl:last-of-type { border-bottom:0; }
+  .fl-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; }
+  .fl-code { font-weight:900; font-size:1.05rem; color:var(--brand-d); }
+  .fl-route { font-weight:700; font-size:.95rem; }
+  .fl-time { font-size:.88rem; color:var(--muted); margin:2px 0 10px; }
+  .stats { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:6px; }
+  .st { background:#f3f8f9; border:1px solid var(--line); border-radius:12px; padding:8px 4px; text-align:center; min-width:0; }
+  .st span { display:block; font-size:.62rem; font-weight:800; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); }
+  .st b { display:block; font-size:1.15rem; margin-top:2px; }
+  .st.main { background:var(--brand); border-color:var(--brand); }
+  .st.main span { color:#ffffffcc; }
+  .st.main b { color:#fff; font-size:1.3rem; }
+  .st.na b { color:#9bb0b6; font-weight:600; }
+  .fl-extra { margin-top:8px; font-size:.82rem; color:var(--muted); }
+
   .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:8px 0; border-bottom:1px dashed var(--line); }
   .flight small { grid-column:2 / 4; color:var(--muted); }
   .flight:last-child { border-bottom:0; }
@@ -141,6 +157,18 @@
   .fld { display:block; font-size:.78rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:10px; }
   .fld input { display:block; width:100%; margin-top:4px; padding:12px 14px; font-size:20px; font-weight:800; color:var(--ink); border:1px solid var(--line); border-radius:14px; background:#f8fbfc; font-family:inherit; -webkit-appearance:none; appearance:none; }
   .fld input:focus { outline:2px solid var(--brand); background:#fff; }
+  .quick { display:flex; gap:8px; flex-wrap:wrap; margin:-2px 0 14px; }
+  .quick button { border:1px solid var(--line); background:#fff; border-radius:99px; padding:8px 16px; font-weight:800; font-size:.95rem; color:var(--brand-d); font-family:inherit; min-height:40px; }
+  .quick button:active { background:#e6f4f6; }
+  .result { background:linear-gradient(135deg,var(--brand),var(--brand-d)); color:#fff; border-radius:18px; padding:16px; }
+  .result .rl { font-size:.8rem; opacity:.85; font-weight:700; }
+  .result .rv { font-size:2.4rem; font-weight:900; line-height:1.1; margin:2px 0; word-break:break-word; }
+  .result .rs { font-size:.8rem; opacity:.85; }
+  .result .rline { display:flex; justify-content:space-between; align-items:baseline; margin-top:10px; padding-top:10px; border-top:1px solid #ffffff44; font-size:.9rem; }
+  .result .rline b { font-size:1.15rem; }
+  details.rev { margin-top:12px; background:#f3f8f9; border:1px solid var(--line); border-radius:14px; padding:10px 14px; }
+  details.rev summary { cursor:pointer; font-weight:800; font-size:.92rem; color:var(--brand-d); list-style:none; min-height:32px; display:flex; align-items:center; }
+  details.rev summary::-webkit-details-marker { display:none; }
   /* ---- Ajustes iPhone / Chrome iOS ---- */
   html { -webkit-text-size-adjust:100%; text-size-adjust:100%; color-scheme:light; }
   a, button, summary, label, select, .chipnav, .chip, .tile { touch-action:manipulation; }
@@ -281,9 +309,9 @@
 
   <h2 id="vuelos">✈️ Vuelos de ida (20/11)</h2>
   <div class="card">
-    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span class="hl">Embarque 11:35</span><small><b class="k">Terminal 1</b> <b class="k">Puerta 3</b> <b class="k">Grupo 5</b></small></div>
-    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span class="hl">Embarque 17:45</span><small><b class="k">Terminal 2</b> <b class="k na">Puerta sin asignar</b> <b class="k">Grupo 4</b></small></div>
-    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span class="hl">Embarque 20:30</span><small><b class="k na">Terminal sin asignar</b> <b class="k">Puerta 19</b> <b class="k">Grupo 5</b></small></div>
+    <div class="fl"><div class="fl-top"><span class="fl-code">LA8049</span><span class="fl-route">Córdoba (COR) → São Paulo (GRU)</span></div><div class="fl-time">12:25 → 15:25</div><div class="stats"><div class="st main"><span>Embarque</span><b>11:35</b></div><div class="st"><span>Terminal</span><b>1</b></div><div class="st"><span>Puerta</span><b>3</b></div><div class="st"><span>Grupo</span><b>5</b></div></div></div>
+    <div class="fl"><div class="fl-top"><span class="fl-code">LA3529</span><span class="fl-route">São Paulo (GRU) → Brasilia (BSB)</span></div><div class="fl-time">18:35 → 20:20</div><div class="stats"><div class="st main"><span>Embarque</span><b>17:45</b></div><div class="st"><span>Terminal</span><b>2</b></div><div class="st na"><span>Puerta</span><b>—</b></div><div class="st"><span>Grupo</span><b>4</b></div></div></div>
+    <div class="fl"><div class="fl-top"><span class="fl-code">LA3496</span><span class="fl-route">Brasilia (BSB) → Recife (REC)</span></div><div class="fl-time">21:20 → 23:55</div><div class="stats"><div class="st main"><span>Embarque</span><b>20:30</b></div><div class="st na"><span>Terminal</span><b>—</b></div><div class="st"><span>Puerta</span><b>19</b></div><div class="st"><span>Grupo</span><b>5</b></div></div></div>
     <p class="note">Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado.</p>
   </div>
 
@@ -295,7 +323,7 @@
 
   <h2 id="vuelta">✈️ Vuelos de vuelta (28/11)</h2>
   <div class="card">
-    <div class="flight"><b>G3 7618</b><span>Recife (REC) 28/11 18:15 → Córdoba (COR) 29/11 00:05</span><span class="hl">Salida 18:15</span><small>Directo · GOL · Boeing 737-8 Max · 5 h 50 min</small></div>
+    <div class="fl"><div class="fl-top"><span class="fl-code">G3 7618</span><span class="fl-route">Recife (REC) → Córdoba (COR)</span></div><div class="fl-time">28/11 18:15 → 29/11 00:05</div><div class="stats"><div class="st main"><span>Salida</span><b>18:15</b></div><div class="st na"><span>Terminal</span><b>—</b></div><div class="st na"><span>Puerta</span><b>—</b></div><div class="st na"><span>Grupo</span><b>—</b></div></div><div class="fl-extra">Directo · GOL · Boeing 737-8 Max · 5 h 50 min</div></div>
     <p class="note pending">Faltan terminal, puerta y grupo de embarque. Se publican cerca de la salida. Recomendación: estar en el aeropuerto de Recife 3 horas antes (15:15), saliendo del hotel alrededor de las 14:00.</p>
   </div>
 
@@ -347,20 +375,29 @@
     <p class="note" id="fxNote"></p>
   </div>
 
-  <h2 id="calculadora">💱 Calculadora pesos y reales</h2>
+  <h2 id="calculadora">💱 Calculadora de precios</h2>
   <div class="card">
-    <div class="seg" id="calcApp">
-      <button type="button" data-app="cocos" class="on">Cocos</button>
-      <button type="button" data-app="mp">Mercado Pago</button>
+    <label class="fld">Precio en reales (R$)
+      <input id="calcBrl" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej: 45">
+    </label>
+    <div class="quick" id="calcQuick">
+      <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button><button type="button" data-v="100">100</button><button type="button" data-v="200">200</button>
     </div>
-    <label class="fld">Pesos argentinos (ARS)
-      <input id="calcArs" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
-    </label>
-    <label class="fld">Reales (BRL)
-      <input id="calcBrl" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
-    </label>
+    <div class="result">
+      <div class="rl">Son aproximadamente</div>
+      <div class="rv" id="resCocos">$ 0</div>
+      <div class="rs" id="rateCocos"></div>
+      <div class="rline"><span>Con Mercado Pago</span><b id="resMp">$ 0</b></div>
+    </div>
+    <details class="rev">
+      <summary>Al revés: de pesos a reales</summary>
+      <label class="fld" style="margin-top:10px">Pesos argentinos (ARS)
+        <input id="calcArs" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej: 30.000">
+      </label>
+      <div class="note" id="revOut"></div>
+    </details>
+    <button type="button" class="btn sec big" id="calcTotal" style="margin-top:12px">Usar el total del viaje</button>
     <p class="note" id="calcRate"></p>
-    <button type="button" class="btn sec big" id="calcTotal">Usar el total del viaje</button>
   </div>
 
   <h2 id="contacto">📞 Contacto</h2>
@@ -831,8 +868,7 @@ async function loadFx() {
   } catch (_) { /* sin internet: queda la última cotización guardada */ }
 }
 
-// ---- Calculadora pesos y reales ----
-let calcApp = 'cocos', calcLast = 'brl';
+// ---- Calculadora de precios (reales a pesos) ----
 function parseNum(s) {
   s = String(s || '').trim().replace(/\s/g, '');
   if (!s) return NaN;
@@ -840,26 +876,26 @@ function parseNum(s) {
   else if ((s.match(/\./g) || []).length > 1 || /\.\d{3}$/.test(s)) s = s.replace(/\./g, '');
   return parseFloat(s);
 }
-const calcRateNow = () => (calcApp === 'cocos' ? FX.cocos : FX.mp).rate;
+const brlFmt = n => 'R$ ' + n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
 function updateCalc() {
-  const a = document.getElementById('calcArs'), b = document.getElementById('calcBrl');
-  if (!a || !b) return;
-  const r = calcRateNow();
-  document.getElementById('calcRate').textContent = '1 BRL = ' + arsRate(r) + ' con ' + (calcApp === 'cocos' ? 'Cocos' : 'Mercado Pago') + '. Precio de compra por PIX, sin comisiones ni impuestos.';
-  if (calcLast === 'ars') { const v = parseNum(a.value); b.value = isNaN(v) ? '' : (v / r).toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
-  else { const v = parseNum(b.value); a.value = isNaN(v) ? '' : Math.round(v * r).toLocaleString('es-AR'); }
+  const b = document.getElementById('calcBrl'), a = document.getElementById('calcArs');
+  if (!b || !a) return;
+  const rc = FX.cocos.rate, rm = FX.mp.rate, v = parseNum(b.value);
+  document.getElementById('resCocos').textContent = isNaN(v) ? '$ 0' : ars(v * rc);
+  document.getElementById('resMp').textContent = isNaN(v) ? '$ 0' : ars(v * rm);
+  document.getElementById('rateCocos').textContent = 'pagando con Cocos · 1 real = ' + arsRate(rc);
+  const w = parseNum(a.value);
+  document.getElementById('revOut').textContent = isNaN(w) ? '' : 'Son ' + brlFmt(w / rc) + ' con Cocos y ' + brlFmt(w / rm) + ' con Mercado Pago.';
+  document.getElementById('calcRate').textContent = 'Cotización de compra de reales por PIX (ComparaPix). Sin comisiones ni impuestos de cada app.';
 }
 (function initCalc() {
-  const a = document.getElementById('calcArs'), b = document.getElementById('calcBrl');
-  if (!a || !b) return;
-  a.addEventListener('input', () => { calcLast = 'ars'; const v = parseNum(a.value), r = calcRateNow(); b.value = isNaN(v) ? '' : (v / r).toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); });
-  b.addEventListener('input', () => { calcLast = 'brl'; const v = parseNum(b.value), r = calcRateNow(); a.value = isNaN(v) ? '' : Math.round(v * r).toLocaleString('es-AR'); });
-  document.querySelectorAll('#calcApp button').forEach(x => x.onclick = () => {
-    calcApp = x.dataset.app;
-    document.querySelectorAll('#calcApp button').forEach(y => y.classList.toggle('on', y === x));
-    updateCalc();
-  });
-  document.getElementById('calcTotal').onclick = () => { calcLast = 'brl'; b.value = total.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); updateCalc(); };
+  const b = document.getElementById('calcBrl'), a = document.getElementById('calcArs');
+  if (!b || !a) return;
+  b.addEventListener('input', updateCalc);
+  a.addEventListener('input', updateCalc);
+  document.querySelectorAll('#calcQuick button').forEach(x => x.onclick = () => { b.value = x.dataset.v; updateCalc(); });
+  document.getElementById('calcTotal').onclick = () => { b.value = total.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); updateCalc(); };
+  updateCalc();
 })();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
