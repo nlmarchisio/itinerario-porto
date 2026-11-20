@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
 <title>Itinerario Porto de Galinhas 20/11 - 28/11</title>
 <style>
 
@@ -132,6 +134,22 @@
 
   @media (min-width:700px) { .bento { grid-template-columns:repeat(4,1fr); } .t-now, .t-tide { grid-column:span 2; } .total { grid-template-columns:repeat(4,1fr); } }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+
+  /* ---- Ajustes iPhone / Chrome iOS ---- */
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; color-scheme:light; }
+  a, button, summary, label, select, .chipnav, .chip, .tile { touch-action:manipulation; }
+  button, select, .btn { -webkit-appearance:none; appearance:none; font-family:inherit; }
+  select { font-size:16px; padding-right:28px; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%235f7780' stroke-width='2'/></svg>") no-repeat right 10px center; }
+  .nav { position:-webkit-sticky; position:sticky; padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); }
+  main { padding-left:max(14px, env(safe-area-inset-left)); padding-right:max(14px, env(safe-area-inset-right)); }
+  .total { left:max(10px, env(safe-area-inset-left)); right:max(10px, env(safe-area-inset-right)); }
+  header.hero .inner { padding-left:max(20px, env(safe-area-inset-left)); padding-right:max(20px, env(safe-area-inset-right)); }
+  #viewer { height:100vh; height:100dvh; overscroll-behavior:contain; }
+  #viewer .body { -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+  #viewer .passbox img { touch-action:pan-x pan-y pinch-zoom; -webkit-touch-callout:default; }
+  details.day summary { -webkit-user-select:none; user-select:none; }
+  .chip a, .chip .cp, .chipnav, .refresh button { min-height:40px; }
+  .chip a, .chip .cp { display:inline-flex; align-items:center; }
   #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
   #viewer.on { display:flex; }
   #viewer .top { display:flex; align-items:center; background:#fff; padding-top:env(safe-area-inset-top); border-bottom:1px solid #e3e3ea; }
@@ -882,8 +900,16 @@ picker.onchange = async () => {
   await putPass(FLIGHTS[curF].id + '_' + PEOPLE_P[curP].id, file);
   showPass();
 };
-document.getElementById('openPasses').onclick = () => { document.getElementById('viewer').classList.add('on'); showPass(); };
-document.getElementById('vclose').onclick = () => document.getElementById('viewer').classList.remove('on');
+let wakeLock = null;
+async function keepAwake(on) {
+  try {
+    if (on && 'wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
+    else if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
+  } catch (_) { /* no disponible en este navegador */ }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && document.getElementById('viewer').classList.contains('on')) keepAwake(true); });
+document.getElementById('openPasses').onclick = () => { document.getElementById('viewer').classList.add('on'); document.body.style.overflow = 'hidden'; keepAwake(true); showPass(); };
+document.getElementById('vclose').onclick = () => { document.getElementById('viewer').classList.remove('on'); document.body.style.overflow = ''; keepAwake(false); };
 document.getElementById('vprev').onclick = () => { curF = (curF + FLIGHTS.length - 1) % FLIGHTS.length; showPass(); };
 document.getElementById('vnext').onclick = () => { curF = (curF + 1) % FLIGHTS.length; showPass(); };
 loadLive();
