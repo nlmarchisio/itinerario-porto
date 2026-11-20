@@ -41,7 +41,7 @@
   .chipnav.on { background:var(--brand); color:#fff; border-color:var(--brand); }
   .chipnav small { font-weight:600; opacity:.7; }
 
-  main { max-width:880px; margin:0 auto; padding:4px 14px 150px; }
+  main { max-width:880px; margin:0 auto; padding:4px 14px 40px; }
   section { scroll-margin-top:118px; }
   h2 { margin:30px 0 12px; font-size:1.2rem; padding-left:12px; border-left:5px solid var(--brand); color:var(--ink); scroll-margin-top:118px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px 18px; margin-bottom:14px; box-shadow:0 2px 10px rgba(20,50,59,.05); }
@@ -130,11 +130,17 @@
   .total { position:fixed; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); max-width:860px; margin:0 auto; z-index:40; display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; padding:10px 16px; border-radius:20px; color:#fff; background:#14323bf2; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 10px 26px rgba(0,0,0,.22); }
   .total span { display:block; font-size:.68rem; opacity:.75; text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
   .total strong { display:block; font-size:1rem; }
-  .toast { position:fixed; left:50%; bottom:130px; transform:translateX(-50%); background:#14323b; color:#fff; padding:8px 16px; border-radius:99px; font-weight:700; z-index:70; font-size:.85rem; }
+  .toast { position:fixed; left:50%; bottom:calc(30px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:#14323b; color:#fff; padding:8px 16px; border-radius:99px; font-weight:700; z-index:70; font-size:.85rem; }
 
   @media (min-width:700px) { .bento { grid-template-columns:repeat(4,1fr); } .t-now, .t-tide { grid-column:span 2; } .total { grid-template-columns:repeat(4,1fr); } }
   @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 
+  .seg { display:flex; gap:6px; background:#e7eff1; padding:4px; border-radius:14px; margin-bottom:12px; }
+  .seg button { flex:1; border:0; background:transparent; padding:10px; border-radius:11px; font-weight:800; font-size:.95rem; color:var(--muted); font-family:inherit; min-height:44px; }
+  .seg button.on { background:#fff; color:var(--brand-d); box-shadow:0 1px 4px rgba(20,50,59,.15); }
+  .fld { display:block; font-size:.78rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:10px; }
+  .fld input { display:block; width:100%; margin-top:4px; padding:12px 14px; font-size:20px; font-weight:800; color:var(--ink); border:1px solid var(--line); border-radius:14px; background:#f8fbfc; font-family:inherit; -webkit-appearance:none; appearance:none; }
+  .fld input:focus { outline:2px solid var(--brand); background:#fff; }
   /* ---- Ajustes iPhone / Chrome iOS ---- */
   html { -webkit-text-size-adjust:100%; text-size-adjust:100%; color-scheme:light; }
   a, button, summary, label, select, .chipnav, .chip, .tile { touch-action:manipulation; }
@@ -261,6 +267,7 @@
     <a class="chipnav" href="#clima">☀️ Clima</a>
     <a class="chipnav" href="#mareas">🌊 Mareas</a>
     <a class="chipnav" href="#resumen">💵 Pesos</a>
+    <a class="chipnav" href="#calculadora">💱 Calcular</a>
   </div>
   <div class="row" id="navDays"></div>
 </nav>
@@ -340,6 +347,22 @@
     <p class="note" id="fxNote"></p>
   </div>
 
+  <h2 id="calculadora">💱 Calculadora pesos y reales</h2>
+  <div class="card">
+    <div class="seg" id="calcApp">
+      <button type="button" data-app="cocos" class="on">Cocos</button>
+      <button type="button" data-app="mp">Mercado Pago</button>
+    </div>
+    <label class="fld">Pesos argentinos (ARS)
+      <input id="calcArs" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
+    </label>
+    <label class="fld">Reales (BRL)
+      <input id="calcBrl" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
+    </label>
+    <p class="note" id="calcRate"></p>
+    <button type="button" class="btn sec big" id="calcTotal">Usar el total del viaje</button>
+  </div>
+
   <h2 id="contacto">📞 Contacto</h2>
   <div class="card">
     <p style="margin:0 0 10px">Excursiones, transfer y reservas:</p>
@@ -349,12 +372,7 @@
 <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff0b3cc,#ffd0e0cc)"><div style="font-size:2rem;letter-spacing:8px">🍹🌴☀️🥥🍍</div><b>¡Buen viaje y a disfrutar!</b><div class="note">Hecho con cariño para unas vacaciones de película.</div></div>
 </main>
 
-<div class="total" id="bar">
-  <div><span>Total en reales</span><strong id="totalBRL">R$ 0</strong></div>
-  <div><span>Cotización del día (Cocos)</span><strong id="rateBar">-</strong></div>
-  <div><span>Total en pesos</span><strong id="arsBar">-</strong></div>
-  <div><span>Clima ahora</span><strong id="wxBar">-</strong></div>
-</div>
+
 
 <div id="viewer">
   <div class="top">
@@ -618,7 +636,6 @@ function summary() {
   rows += '<tr><td><b>Total (2 personas)</b></td><td><b>' + fmt(total) + '</b></td><td><b>' + ars(total * rate) + '</b></td></tr>';
   rows += '<tr><td>Por persona</td><td>' + fmt(total / PEOPLE) + '</td><td>' + ars(total / PEOPLE * rate) + '</td></tr>';
   document.getElementById('summary').innerHTML = rows;
-  document.getElementById('totalBRL').textContent = fmt(total);
   convert();
 }
 
@@ -732,18 +749,8 @@ function updateStamp() {
   s.textContent = 'Clima y mareas actualizados ' + (mins < 1 ? 'recién' : 'hace ' + mins + ' min') + ' · se refresca solo cada 15 min';
 }
 
-function updateBar() {
-  const el = document.getElementById('wxBar'); if (!el) return;
-  if (CUR) {
-    const water = MAR && MAR.sea_surface_temperature != null ? ' · agua ' + Math.round(MAR.sea_surface_temperature) + '°' : '';
-    el.textContent = WMO(CUR.weather_code)[0] + ' ' + Math.round(CUR.temperature_2m) + '°' + water;
-  } else {
-    const w = WX[recifeToday()] || WX['2026-11-20'];
-    el.textContent = w ? WMO(w.code)[0] + ' ' + w.tmin + '° a ' + w.tmax + '°' : '-';
-  }
-}
 function applyLive() {
-  renderToday(); renderWxTables(); render(); updateStamp(); updateBadge(); updateBar();
+  renderToday(); renderWxTables(); render(); updateStamp(); updateBadge();
 }
 
 async function refreshLive() {
@@ -810,8 +817,7 @@ function convert() {
   const diff = (FX.mp.rate - FX.cocos.rate) * total;
   h += `<p class="note">Con Cocos pagás ${ars(Math.abs(diff))} ${diff >= 0 ? 'menos' : 'más'} que con Mercado Pago por este total.</p>`;
   wrap.innerHTML = h;
-  document.getElementById('arsBar').textContent = ars(total * FX.cocos.rate);
-  document.getElementById('rateBar').textContent = arsRate(FX.cocos.rate) + ' por R$ 1';
+  updateCalc();
   const at = new Date(FX.cocos.at).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
   document.getElementById('fxNote').textContent = (FX.live ? 'Cotización de ComparaPix de las ' : 'Última cotización guardada, de las ') + at + '. Es el precio de compra de reales por PIX, se refresca cada ~30 min y cambia durante el día. No incluye comisiones ni impuestos que cobre cada app. Para pagar por PIX hace falta la clave o el QR del proveedor.';
 }
@@ -824,6 +830,37 @@ async function loadFx() {
     if (q.cocos && q.mp) { FX = { cocos:q.cocos, mp:q.mp, live:true }; localStorage.setItem('fx', JSON.stringify({ cocos:q.cocos, mp:q.mp })); convert(); }
   } catch (_) { /* sin internet: queda la última cotización guardada */ }
 }
+
+// ---- Calculadora pesos y reales ----
+let calcApp = 'cocos', calcLast = 'brl';
+function parseNum(s) {
+  s = String(s || '').trim().replace(/\s/g, '');
+  if (!s) return NaN;
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  else if ((s.match(/\./g) || []).length > 1 || /\.\d{3}$/.test(s)) s = s.replace(/\./g, '');
+  return parseFloat(s);
+}
+const calcRateNow = () => (calcApp === 'cocos' ? FX.cocos : FX.mp).rate;
+function updateCalc() {
+  const a = document.getElementById('calcArs'), b = document.getElementById('calcBrl');
+  if (!a || !b) return;
+  const r = calcRateNow();
+  document.getElementById('calcRate').textContent = '1 BRL = ' + arsRate(r) + ' con ' + (calcApp === 'cocos' ? 'Cocos' : 'Mercado Pago') + '. Precio de compra por PIX, sin comisiones ni impuestos.';
+  if (calcLast === 'ars') { const v = parseNum(a.value); b.value = isNaN(v) ? '' : (v / r).toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+  else { const v = parseNum(b.value); a.value = isNaN(v) ? '' : Math.round(v * r).toLocaleString('es-AR'); }
+}
+(function initCalc() {
+  const a = document.getElementById('calcArs'), b = document.getElementById('calcBrl');
+  if (!a || !b) return;
+  a.addEventListener('input', () => { calcLast = 'ars'; const v = parseNum(a.value), r = calcRateNow(); b.value = isNaN(v) ? '' : (v / r).toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); });
+  b.addEventListener('input', () => { calcLast = 'brl'; const v = parseNum(b.value), r = calcRateNow(); a.value = isNaN(v) ? '' : Math.round(v * r).toLocaleString('es-AR'); });
+  document.querySelectorAll('#calcApp button').forEach(x => x.onclick = () => {
+    calcApp = x.dataset.app;
+    document.querySelectorAll('#calcApp button').forEach(y => y.classList.toggle('on', y === x));
+    updateCalc();
+  });
+  document.getElementById('calcTotal').onclick = () => { calcLast = 'brl'; b.value = total.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 }); updateCalc(); };
+})();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 // ---- Tarjetas de embarque (IndexedDB, solo en el dispositivo) ----
