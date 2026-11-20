@@ -30,18 +30,38 @@
   .hl { background:#fff3cd; color:#7a4b00; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap; }
   .k { display:inline-block; background:#e4f4f9; color:#0a5f78; padding:2px 10px; border-radius:6px; margin:2px 6px 2px 0; font-size:.95rem; }
   .k.na { background:#eef1f4; color:var(--muted); font-weight:500; }
-  .pass { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:8px 0; border-bottom:1px dashed var(--line); }
-  .pass:last-child { border-bottom:0; }
-  .pass .lbl { flex:1; min-width:150px; font-size:.95rem; }
   .btn { appearance:none; border:0; border-radius:10px; padding:12px 16px; font-size:1rem; font-weight:600; background:var(--accent); color:#fff; cursor:pointer; min-height:44px; }
   .btn.sec { background:#eef1f4; color:var(--ink); }
-  .btn.off { background:#d5dde4; color:#5d7387; }
-  #viewer { position:fixed; inset:0; background:#fff; z-index:50; display:none; flex-direction:column; }
+  .btn.big { width:100%; padding:16px; font-size:1.05rem; }
+  #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
   #viewer.on { display:flex; }
-  #viewer .bar { display:flex; gap:8px; padding:10px; padding-top:max(10px, env(safe-area-inset-top)); background:#16324a; color:#fff; align-items:center; }
-  #viewer .bar span { flex:1; font-weight:600; font-size:.95rem; }
-  #viewer .imgwrap { flex:1; overflow:auto; background:#fff; text-align:center; }
-  #viewer img { max-width:100%; height:auto; }
+  #viewer .top { display:flex; align-items:center; background:#fff; padding-top:env(safe-area-inset-top); border-bottom:1px solid #e3e3ea; }
+  #viewer .arrow { appearance:none; border:0; background:none; font-size:1.6rem; padding:10px 14px; color:#1c0f5a; cursor:pointer; }
+  #viewer .tabs { flex:1; display:flex; overflow-x:auto; }
+  #viewer .tab { flex:1; min-width:max-content; text-align:center; padding:14px 10px; font-size:.95rem; color:#6b6b80; border-bottom:3px solid transparent; cursor:pointer; background:none; border-top:0; border-left:0; border-right:0; }
+  #viewer .tab.on { color:#1c0f5a; font-weight:700; border-bottom-color:#e6007e; }
+  #viewer .people { display:flex; gap:14px; padding:10px 14px; background:#fff; border-bottom:1px solid #e3e3ea; }
+  #viewer .person { appearance:none; background:none; border:2px solid transparent; border-radius:6px; padding:4px 8px; text-align:center; font-size:.75rem; color:#4a4a5e; cursor:pointer; }
+  #viewer .person.on { border-color:#1c0f5a; }
+  #viewer .av { width:40px; height:40px; border-radius:50%; margin:0 auto 2px; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:600; border:1.5px solid; background:#fff; }
+  #viewer .person[data-p="nico"] .av { color:#0f8a7a; border-color:#0f8a7a; }
+  #viewer .person[data-p="nico"].on .av { background:#0f8a7a; color:#fff; }
+  #viewer .person[data-p="novia"] .av { color:#5a7a1e; border-color:#5a7a1e; }
+  #viewer .person[data-p="novia"].on .av { background:#5a7a1e; color:#fff; }
+  #viewer .body { flex:1; overflow:auto; padding-bottom:max(16px, env(safe-area-inset-bottom)); }
+  #viewer .passbox { background:#fff; text-align:center; min-height:200px; }
+  #viewer .passbox img { width:100%; height:auto; display:block; }
+  #viewer .empty { padding:40px 20px; text-align:center; color:#6b6b80; }
+  #viewer .actions { display:flex; gap:8px; padding:10px 14px; }
+  #viewer .actions .btn { flex:1; }
+  #viewer .tl { padding:6px 14px 14px; }
+  #viewer .tl h4 { margin:10px 0 8px; font-size:.85rem; color:#6b6b80; font-weight:600; }
+  #viewer .node { position:relative; background:#fff; border-radius:8px; padding:10px 14px; margin:0 0 14px; border:1px solid #e3e3ea; color:#6b6b80; font-size:.9rem; }
+  #viewer .node:not(:last-child)::after { content:""; position:absolute; left:22px; top:100%; width:2px; height:14px; background:#1c0f5a; }
+  #viewer .node.on { background:#e8e6fb; color:#1c0f5a; border-color:#d3cff5; }
+  #viewer .node.on .city { font-size:1.15rem; font-weight:700; }
+  #viewer .city { font-size:1rem; color:#1c0f5a; }
+  #viewer .conn { font-weight:700; font-size:.8rem; color:#1c0f5a; }
   .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
@@ -66,15 +86,15 @@
     <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span class="hl">Embarque 11:35</span><small><b class="k">Terminal 1</b> <b class="k">Puerta 3</b> <b class="k">Grupo 5</b></small></div>
     <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span class="hl">Embarque 17:45</span><small><b class="k">Terminal 2</b> <b class="k na">Puerta sin asignar</b> <b class="k">Grupo 4</b></small></div>
     <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span class="hl">Embarque 20:30</span><small><b class="k na">Terminal sin asignar</b> <b class="k">Puerta 19</b> <b class="k">Grupo 5</b></small></div>
-    <p class="note">Reserva LATAM: MTMINY. Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
+    <p class="note">Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
   </div>
 
   <h2>🎫 Tarjetas de embarque</h2>
   <div class="card">
-    <p class="note">Se guardan solo en este teléfono (no se suben a internet). Cargá cada captura una vez y después tocá "Abrir" en el aeropuerto. Subí capturas de pantalla (imagen), no PDF.</p>
-    <div id="passes"></div>
-    <p class="note">Respaldo: guardá también las tarjetas en la app de LATAM o en Apple Wallet, por si el navegador borra los datos del sitio.</p>
+    <button class="btn big" id="openPasses">Abrir tarjetas de embarque</button>
+    <p class="note">Las capturas se guardan solo en este teléfono (no se suben a internet). La primera vez cargás cada captura con "Cargar captura". Subí capturas de pantalla (imagen), no PDF. Guardá también las tarjetas en la app de LATAM o en Apple Wallet como respaldo.</p>
   </div>
+
   <h2>✈️ Vuelos de vuelta (28/11)</h2>
   <div class="card">
     <p class="pending">Pendiente: faltan los datos de los vuelos de regreso. Pasalos y los cargo acá.</p>
@@ -104,8 +124,18 @@
 </div>
 
 <div id="viewer">
-  <div class="bar"><span id="vtitle"></span><button class="btn sec" id="vreplace">Reemplazar</button><button class="btn sec" id="vclose">Cerrar</button></div>
-  <div class="imgwrap"><img id="vimg" alt="Tarjeta de embarque"></div>
+  <div class="top">
+    <button class="arrow" id="vprev" aria-label="Anterior">&#8249;</button>
+    <div class="tabs" id="vtabs"></div>
+    <button class="arrow" id="vnext" aria-label="Siguiente">&#8250;</button>
+  </div>
+  <div class="people" id="vpeople"></div>
+  <div class="body">
+    <div class="passbox" id="vpass"></div>
+    <div class="actions" id="vactions"></div>
+    <div class="tl" id="vtl"></div>
+  </div>
+  <div class="actions"><button class="btn sec" id="vclose">Cerrar</button></div>
 </div>
 <input type="file" id="picker" accept="image/*" hidden>
 <script>
@@ -196,12 +226,18 @@ document.getElementById('rate').value = localStorage.getItem('rate') || '';
 document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.target.value); convert(); };
 
 // ---- Tarjetas de embarque (IndexedDB, solo en el dispositivo) ----
-const PASS_FLIGHTS = [
-  { id:'LA8049', label:'LA8049 · COR → GRU · 20/11' },
-  { id:'LA3529', label:'LA3529 · GRU → BSB · 20/11' },
-  { id:'LA3496', label:'LA3496 · BSB → REC · 20/11' }
+const FLIGHTS = [
+  { id:'LA8049', tab:'Córdoba a São Paulo' },
+  { id:'LA3529', tab:'São Paulo a Brasilia' },
+  { id:'LA3496', tab:'Brasilia a Recife' }
 ];
-const PASS_PEOPLE = [ { id:'nico', name:'Nicolás' }, { id:'novia', name:'Novia' } ];
+const PEOPLE_P = [ { id:'nico', ini:'NM', name:'Nicolas M.' }, { id:'novia', ini:'MF', name:'Maria F.' } ];
+const NODES = [
+  { date:'20 de nov de 2026', city:'Córdoba', code:'COR', apt:'Pajas Blancas', time:'12:25' },
+  { city:'São Paulo', code:'GRU', apt:'Guarulhos Intl.', time:'llega 15:25 · sale 18:35', conn:'Conexión de 3 h 10 min' },
+  { city:'Brasilia', code:'BSB', apt:'Brasilia Intl.', time:'llega 20:20 · sale 21:20', conn:'Conexión de 1 h' },
+  { city:'Recife', code:'REC', apt:'Guararapes Intl.', time:'23:55' }
+];
 
 const dbp = new Promise((res, rej) => {
   const r = indexedDB.open('itinerario-passes', 1);
@@ -212,54 +248,54 @@ const dbp = new Promise((res, rej) => {
 const idb = async (mode, fn) => { const db = await dbp; return new Promise((res, rej) => { const tx = db.transaction('passes', mode); const rq = fn(tx.objectStore('passes')); tx.oncomplete = () => res(rq && rq.result); tx.onerror = () => rej(tx.error); }); };
 const getPass = k => idb('readonly', s => s.get(k));
 const putPass = (k, v) => idb('readwrite', s => s.put(v, k));
+const delPass = k => idb('readwrite', s => s.delete(k));
 
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
 
-let pendingKey = null, pendingTitle = '';
 const picker = document.getElementById('picker');
+let curF = 0, curP = 0, curUrl = null;
 
-async function renderPasses() {
-  const box = document.getElementById('passes');
-  box.innerHTML = '';
-  for (const fl of PASS_FLIGHTS) {
-    for (const p of PASS_PEOPLE) {
-      const key = fl.id + '_' + p.id;
-      const has = !!(await getPass(key));
-      const row = document.createElement('div');
-      row.className = 'pass';
-      row.innerHTML = `<div class="lbl"><b>${p.name}</b><br><span class="note">${fl.label}</span></div>`;
-      const b = document.createElement('button');
-      b.className = 'btn' + (has ? '' : ' off');
-      b.textContent = has ? 'Abrir' : 'Cargar';
-      b.onclick = () => has ? openPass(key, p.name + ' · ' + fl.id) : choose(key, p.name + ' · ' + fl.id);
-      row.appendChild(b);
-      box.appendChild(row);
-    }
+async function showPass() {
+  const fl = FLIGHTS[curF], pe = PEOPLE_P[curP];
+  const key = fl.id + '_' + pe.id;
+
+  document.getElementById('vtabs').innerHTML = FLIGHTS.map((x, i) => `<button class="tab ${i===curF?'on':''}" data-f="${i}">${x.tab}</button>`).join('');
+  document.getElementById('vpeople').innerHTML = PEOPLE_P.map((x, i) => `<button class="person ${i===curP?'on':''}" data-p="${x.id}" data-i="${i}"><div class="av">${x.ini}</div>${x.name}</button>`).join('');
+
+  const blob = await getPass(key);
+  const box = document.getElementById('vpass');
+  const act = document.getElementById('vactions');
+  if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; }
+  if (blob) {
+    curUrl = URL.createObjectURL(blob);
+    box.innerHTML = `<img src="${curUrl}" alt="Tarjeta de embarque ${fl.id} ${pe.name}">`;
+    act.innerHTML = `<button class="btn sec" id="vreplace">Reemplazar captura</button><button class="btn sec" id="vdelete">Borrar</button>`;
+    document.getElementById('vreplace').onclick = () => { picker.value=''; picker.click(); };
+    document.getElementById('vdelete').onclick = async () => { await delPass(key); showPass(); };
+  } else {
+    box.innerHTML = `<div class="empty">Todavía no cargaste la tarjeta de <b>${pe.name}</b> para ${fl.id}.</div>`;
+    act.innerHTML = `<button class="btn" id="vload">Cargar captura</button>`;
+    document.getElementById('vload').onclick = () => { picker.value=''; picker.click(); };
   }
+
+  document.getElementById('vtl').innerHTML = '<h4>Ruta</h4>' + NODES.map((n, i) => {
+    const on = i === curF;
+    return `<div class="node ${on?'on':''}">${n.date ? `<div>${n.date}</div>` : ''}<div><span class="city">${n.city}</span> ${n.code}</div><div>${n.time}</div><div>${n.apt}</div>${n.conn ? `<div class="conn">${n.conn}</div>` : ''}</div>`;
+  }).join('');
+
+  document.querySelectorAll('#vtabs .tab').forEach(b => b.onclick = () => { curF = +b.dataset.f; showPass(); });
+  document.querySelectorAll('#vpeople .person').forEach(b => b.onclick = () => { curP = +b.dataset.i; showPass(); });
 }
-function choose(key, title) { pendingKey = key; pendingTitle = title; picker.value = ''; picker.click(); }
 picker.onchange = async () => {
   const file = picker.files[0];
-  if (!file || !pendingKey) return;
-  await putPass(pendingKey, file);
-  const k = pendingKey, t = pendingTitle;
-  await renderPasses();
-  openPass(k, t);
+  if (!file) return;
+  await putPass(FLIGHTS[curF].id + '_' + PEOPLE_P[curP].id, file);
+  showPass();
 };
-let currentUrl = null, currentKey = null, currentTitle = '';
-async function openPass(key, title) {
-  const blob = await getPass(key);
-  if (!blob) return;
-  if (currentUrl) URL.revokeObjectURL(currentUrl);
-  currentUrl = URL.createObjectURL(blob);
-  currentKey = key; currentTitle = title;
-  document.getElementById('vimg').src = currentUrl;
-  document.getElementById('vtitle').textContent = title;
-  document.getElementById('viewer').classList.add('on');
-}
+document.getElementById('openPasses').onclick = () => { document.getElementById('viewer').classList.add('on'); showPass(); };
 document.getElementById('vclose').onclick = () => document.getElementById('viewer').classList.remove('on');
-document.getElementById('vreplace').onclick = () => choose(currentKey, currentTitle);
-renderPasses();
+document.getElementById('vprev').onclick = () => { curF = (curF + FLIGHTS.length - 1) % FLIGHTS.length; showPass(); };
+document.getElementById('vnext').onclick = () => { curF = (curF + 1) % FLIGHTS.length; showPass(); };
 render();
 </script>
 </body>
