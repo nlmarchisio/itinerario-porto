@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Itinerario Porto de Galinhas 20/11 - 28/11</title>
+<style>
+  :root { --bg:#f4f8fb; --card:#fff; --ink:#16324a; --muted:#5d7387; --accent:#0a8fb5; --ok:#1f9d6b; --line:#dbe6ee; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; }
+  header { background:linear-gradient(135deg,#0a8fb5,#16324a); color:#fff; padding:28px 16px; text-align:center; }
+  header h1 { margin:0 0 6px; font-size:1.6rem; }
+  header p { margin:2px 0; opacity:.9; }
+  main { max-width:860px; margin:0 auto; padding:16px 16px 120px; }
+  h2 { margin:28px 0 10px; font-size:1.2rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+  .day { display:flex; gap:14px; }
+  .date { min-width:64px; text-align:center; color:var(--accent); font-weight:700; }
+  .date small { display:block; color:var(--muted); font-weight:500; }
+  .day h3 { margin:0 0 4px; font-size:1.05rem; }
+  .day ul { margin:6px 0 0; padding-left:18px; color:var(--muted); font-size:.92rem; }
+  .tag { display:inline-block; font-size:.75rem; padding:2px 8px; border-radius:99px; background:#e4f4f9; color:var(--accent); margin-right:6px; }
+  .tag.free { background:#eef1f4; color:var(--muted); }
+  label.opt { display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-top:6px; }
+  label.opt input { margin-top:4px; width:18px; height:18px; }
+  select { margin-top:8px; padding:6px; border-radius:8px; border:1px solid var(--line); max-width:100%; }
+  .price { font-weight:700; color:var(--ok); white-space:nowrap; }
+  .flight { display:grid; grid-template-columns:90px 1fr auto; gap:8px; font-size:.95rem; padding:6px 0; border-bottom:1px dashed var(--line); }
+  .flight:last-child { border-bottom:0; }
+  .pending { color:#b26a00; }
+  table { width:100%; border-collapse:collapse; font-size:.95rem; }
+  td { padding:6px 0; border-bottom:1px solid var(--line); }
+  td:last-child { text-align:right; }
+  .total { position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:#fff; padding:12px 16px; display:flex; justify-content:center; gap:24px; flex-wrap:wrap; font-size:.95rem; }
+  .total strong { font-size:1.15rem; }
+  a { color:var(--accent); }
+  .note { font-size:.85rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Porto de Galinhas 🌴</h1>
+  <p>20/11/2026 al 28/11/2026 · 2 personas</p>
+  <p>Ora Beach Residence, R. Angelim, Porto de Galinhas, Ipojuca - PE</p>
+</header>
+
+<main>
+  <h2>✈️ Vuelos de ida (20/11)</h2>
+  <div class="card">
+    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span>Terminal 1</span></div>
+    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span>Terminal 2</span></div>
+    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span>Puerta 19</span></div>
+    <p class="note">Reserva LATAM: MTMINY. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
+  </div>
+
+  <h2>✈️ Vuelos de vuelta (28/11)</h2>
+  <div class="card">
+    <p class="pending">Pendiente: faltan los datos de los vuelos de regreso. Pasalos y los cargo acá.</p>
+  </div>
+
+  <h2>🗓️ Itinerario por día</h2>
+  <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados por Diogo (<a href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">sitio</a>) en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
+  <div id="days"></div>
+
+  <h2>💰 Resumen</h2>
+  <div class="card">
+    <table id="summary"></table>
+    <p class="note">No incluye comidas, propinas, transfer aeropuerto ni el alojamiento. Conversión: ingresá cuántos pesos o dólares equivale 1 BRL.</p>
+    <label>1 BRL = <input id="rate" type="number" min="0" step="0.01" placeholder="cotización"> <span id="rateLabel"></span></label>
+    <div id="converted" class="price"></div>
+  </div>
+
+  <h2>📞 Contacto</h2>
+  <div class="card">
+    <a href="https://wa.me/5581997148594?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20valores%20e%20disponibilidade%20dos%20passeios%20em%20Porto%20de%20Galinhas." target="_blank" rel="noopener">Diogo Ferreira · WhatsApp +55 81 99714-8594</a>
+  </div>
+</main>
+
+<div class="total">
+  <span>Total 2 personas: <strong id="totalBRL">R$ 0</strong></span>
+  <span>Por persona: <strong id="perPerson">R$ 0</strong></span>
+</div>
+
+<script>
+const PEOPLE = 2;
+const fmt = n => 'R$ ' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+// perPerson=true multiplica por PEOPLE. Los precios salen de https://diogopasseios.lovable.app/
+const days = [
+  { date:'20/11', dow:'Vie', title:'Viaje y llegada', note:'Llegada a Recife 23:55. Traslado al hotel y descanso.', items:[] },
+  { date:'21/11', dow:'Sáb', title:'Buggy Ponta a Ponta', note:'Primero para conocer la zona. Muro Alto, Praia do Cupe, Maracaípe, 4 horas, privado.',
+    items:[{ id:'buggy', name:'Buggy Ponta a Ponta (4 h)', price:450, perPerson:false }] },
+  { date:'22/11', dow:'Dom', title:'Mergulho com Cilindro', note:'Piscinas naturales de Porto de Galinhas. Ideal para principiantes, ~1 h (15-20 min de buceo). Depende de la marea.',
+    items:[{ id:'mergulho', name:'Mergulho com Cilindro', price:150, perPerson:true }] },
+  { date:'23/11', dow:'Lun', title:'Praia dos Carneiros', note:'Banco de arena, baño de arcilla, iglesita São Benedito, day use.',
+    items:[{ id:'carneiros', name:'Praia dos Carneiros', perPerson:true,
+      options:[
+        { label:'Rota dos Carneiros (catamarã)', price:120 },
+        { label:'Bora Bora con catamarã', price:180 },
+        { label:'Bora Bora con lancha', price:200 }
+      ]}] },
+  { date:'24/11', dow:'Mar', title:'Día libre', note:'Playa y descanso en Porto de Galinhas.', items:[] },
+  { date:'25/11', dow:'Mié', title:'Maragogi com Catamarã', note:'Día completo. Piscinas naturales, Caminho de Moisés (según marea), Praia de Antunes. Salida temprano.',
+    items:[{ id:'maragogi', name:'Maragogi com Catamarã', price:150, perPerson:true }] },
+  { date:'26/11', dow:'Jue', title:'Día libre', note:'Descanso tras el día largo de Maragogi.', items:[] },
+  { date:'27/11', dow:'Vie', title:'Ilha de Santo Aleixo', note:'Travesía en lancha, guía, trilha ecológica y tiempo libre en la isla.',
+    items:[{ id:'aleixo', name:'Ilha de Santo Aleixo', price:140, perPerson:true }] },
+  { date:'28/11', dow:'Sáb', title:'Regreso', note:'Check-out y traslado al aeropuerto de Recife. Horario a definir con el vuelo de vuelta.', items:[] }
+];
+
+const state = JSON.parse(localStorage.getItem('itin') || '{}');
+const save = () => localStorage.setItem('itin', JSON.stringify(state));
+const isOn = id => state[id] === undefined ? true : state[id];
+
+function render() {
+  const el = document.getElementById('days');
+  el.innerHTML = '';
+  days.forEach(d => {
+    const active = d.items.filter(i => isOn(i.id));
+    const free = d.items.length > 0 && active.length === 0;
+    const div = document.createElement('div');
+    div.className = 'card day';
+    let html = `<div class="date">${d.date}<small>${d.dow}</small></div><div style="flex:1"><h3>${free ? 'Día libre' : d.title}</h3>`;
+    html += `<span class="tag ${(d.items.length === 0 || free) ? 'free' : ''}">${d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión'}</span>`;
+    html += `<div class="note">${d.note}</div>`;
+    d.items.forEach(i => {
+      const price = itemPrice(i);
+      html += `<label class="opt"><input type="checkbox" data-id="${i.id}" ${isOn(i.id) ? 'checked' : ''}><span>${i.name} <span class="price">${fmt(price)}${i.perPerson ? ' (2 pers.)' : ' (vehículo)'}</span></span></label>`;
+      if (i.options) {
+        html += `<select data-opt="${i.id}">` + i.options.map((o, k) => `<option value="${k}" ${(state['opt_'+i.id]||0)==k?'selected':''}>${o.label} · R$ ${o.price} p/p</option>`).join('') + `</select>`;
+      }
+    });
+    html += '</div>';
+    div.innerHTML = html;
+    el.appendChild(div);
+  });
+  el.querySelectorAll('input[data-id]').forEach(c => c.onchange = () => { state[c.dataset.id] = c.checked; save(); render(); });
+  el.querySelectorAll('select[data-opt]').forEach(s => s.onchange = () => { state['opt_'+s.dataset.opt] = +s.value; save(); render(); });
+  summary();
+}
+
+function unit(i) { return i.options ? i.options[state['opt_'+i.id] || 0].price : i.price; }
+function itemPrice(i) { return unit(i) * (i.perPerson ? PEOPLE : 1); }
+
+let total = 0;
+function summary() {
+  total = 0;
+  let rows = '';
+  days.flatMap(d => d.items.map(i => ({ d, i }))).forEach(({ d, i }) => {
+    if (!isOn(i.id)) return;
+    const p = itemPrice(i);
+    total += p;
+    const name = i.options ? i.options[state['opt_'+i.id] || 0].label : i.name;
+    rows += `<tr><td>${d.date} · ${name}</td><td>${fmt(p)}</td></tr>`;
+  });
+  if (!rows) rows = '<tr><td>Sin excursiones seleccionadas</td><td>R$ 0,00</td></tr>';
+  rows += `<tr><td><b>Total (2 personas)</b></td><td><b>${fmt(total)}</b></td></tr>`;
+  document.getElementById('summary').innerHTML = rows;
+  document.getElementById('totalBRL').textContent = fmt(total);
+  document.getElementById('perPerson').textContent = fmt(total / PEOPLE);
+  convert();
+}
+
+function convert() {
+  const r = parseFloat(document.getElementById('rate').value);
+  document.getElementById('converted').textContent = r > 0 ? `≈ ${(total * r).toLocaleString('es-AR', {maximumFractionDigits:0})} en tu moneda` : '';
+}
+document.getElementById('rate').value = localStorage.getItem('rate') || '';
+document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.target.value); convert(); };
+
+render();
+</script>
+</body>
+</html>
