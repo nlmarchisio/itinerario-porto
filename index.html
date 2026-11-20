@@ -25,7 +25,8 @@
   label.opt input { margin-top:4px; width:18px; height:18px; }
   select { margin-top:8px; padding:6px; border-radius:8px; border:1px solid var(--line); max-width:100%; }
   .price { font-weight:700; color:var(--ok); white-space:nowrap; }
-  .flight { display:grid; grid-template-columns:90px 1fr auto; gap:8px; font-size:.95rem; padding:6px 0; border-bottom:1px dashed var(--line); }
+  .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:6px 0; border-bottom:1px dashed var(--line); }
+  .flight small { grid-column:2 / 4; color:var(--muted); }
   .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
@@ -47,10 +48,10 @@
 <main>
   <h2>✈️ Vuelos de ida (20/11)</h2>
   <div class="card">
-    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span>Terminal 1</span></div>
-    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span>Terminal 2</span></div>
-    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span>Puerta 19</span></div>
-    <p class="note">Reserva LATAM: MTMINY. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
+    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span>Embarque 11:35</span><small>Terminal 1 · Puerta 3 · Grupo 5</small></div>
+    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span>Embarque 17:45</span><small>Terminal 2 · Puerta sin asignar · Grupo 4</small></div>
+    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span>Embarque 20:30</span><small>Terminal sin asignar · Puerta 19 · Grupo 5</small></div>
+    <p class="note">Reserva LATAM: MTMINY. Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
   </div>
 
   <h2>✈️ Vuelos de vuelta (28/11)</h2>
