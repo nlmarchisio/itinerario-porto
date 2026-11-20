@@ -97,7 +97,8 @@
 
   <h2>✈️ Vuelos de vuelta (28/11)</h2>
   <div class="card">
-    <p class="pending">Pendiente: faltan los datos de los vuelos de regreso. Pasalos y los cargo acá.</p>
+    <div class="flight"><b>G3 7618</b><span>Recife (REC) 28/11 18:15 → Córdoba (COR) 29/11 00:05</span><span class="hl">Salida 18:15</span><small>Directo · GOL · Boeing 737-8 Max · 5 h 50 min</small></div>
+    <p class="note pending">Faltan terminal, puerta y grupo de embarque. Se publican cerca de la salida. Recomendación: estar en el aeropuerto de Recife 3 horas antes (15:15), saliendo del hotel alrededor de las 14:00.</p>
   </div>
 
   <h2>🗓️ Itinerario por día</h2>
@@ -162,7 +163,7 @@ const days = [
   { date:'26/11', dow:'Jue', title:'Día libre', note:'Descanso tras el día largo de Maragogi.', items:[] },
   { date:'27/11', dow:'Vie', title:'Ilha de Santo Aleixo', note:'Travesía en lancha, guía, trilha ecológica y tiempo libre en la isla.',
     items:[{ id:'aleixo', name:'Ilha de Santo Aleixo', price:140, perPerson:true }] },
-  { date:'28/11', dow:'Sáb', title:'Regreso', note:'Check-out y traslado al aeropuerto de Recife. Horario a definir con el vuelo de vuelta.', items:[] }
+  { date:'28/11', dow:'Sáb', title:'Regreso', note:'Check-out y traslado al aeropuerto de Recife (~1 h). Vuelo G3 7618 sale a las 18:15. Salir del hotel alrededor de las 14:00.', items:[] }
 ];
 
 const state = JSON.parse(localStorage.getItem('itin') || '{}');
@@ -229,7 +230,8 @@ document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.
 const FLIGHTS = [
   { id:'LA8049', tab:'Córdoba a São Paulo' },
   { id:'LA3529', tab:'São Paulo a Brasilia' },
-  { id:'LA3496', tab:'Brasilia a Recife' }
+  { id:'LA3496', tab:'Brasilia a Recife' },
+  { id:'G37618', tab:'Recife a Córdoba', back:true }
 ];
 const PEOPLE_P = [ { id:'nico', ini:'NM', name:'Nicolas M.' }, { id:'novia', ini:'MF', name:'Maria F.' } ];
 const NODES = [
@@ -237,6 +239,11 @@ const NODES = [
   { city:'São Paulo', code:'GRU', apt:'Guarulhos Intl.', time:'llega 15:25 · sale 18:35', conn:'Conexión de 3 h 10 min' },
   { city:'Brasilia', code:'BSB', apt:'Brasilia Intl.', time:'llega 20:20 · sale 21:20', conn:'Conexión de 1 h' },
   { city:'Recife', code:'REC', apt:'Guararapes Intl.', time:'23:55' }
+];
+
+const NODES_BACK = [
+  { date:'28 de nov de 2026', city:'Recife', code:'REC', apt:'Guararapes Intl.', time:'18:15' },
+  { date:'29 de nov de 2026', city:'Córdoba', code:'COR', apt:'Pajas Blancas', time:'00:05' }
 ];
 
 const dbp = new Promise((res, rej) => {
@@ -278,8 +285,9 @@ async function showPass() {
     document.getElementById('vload').onclick = () => { picker.value=''; picker.click(); };
   }
 
-  document.getElementById('vtl').innerHTML = '<h4>Ruta</h4>' + NODES.map((n, i) => {
-    const on = i === curF;
+  const list = fl.back ? NODES_BACK : NODES;
+  document.getElementById('vtl').innerHTML = '<h4>Ruta</h4>' + list.map((n, i) => {
+    const on = fl.back ? i === 0 : i === curF;
     return `<div class="node ${on?'on':''}">${n.date ? `<div>${n.date}</div>` : ''}<div><span class="city">${n.city}</span> ${n.code}</div><div>${n.time}</div><div>${n.apt}</div>${n.conn ? `<div class="conn">${n.conn}</div>` : ''}</div>`;
   }).join('');
 
