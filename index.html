@@ -5,35 +5,137 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Itinerario Porto de Galinhas 20/11 - 28/11</title>
 <style>
-  :root { --bg:#f4f8fb; --card:#fff; --ink:#16324a; --muted:#5d7387; --accent:#0a8fb5; --ok:#1f9d6b; --line:#dbe6ee; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; }
-  header { background:linear-gradient(135deg,#0a8fb5,#16324a); color:#fff; padding:28px 16px; text-align:center; }
-  header h1 { margin:0 0 6px; font-size:1.6rem; }
-  header p { margin:2px 0; opacity:.9; }
-  main { max-width:860px; margin:0 auto; padding:16px 16px 120px; }
-  h2 { margin:28px 0 10px; font-size:1.2rem; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
-  .day { display:flex; gap:14px; }
-  .date { min-width:64px; text-align:center; color:var(--accent); font-weight:700; }
-  .date small { display:block; color:var(--muted); font-weight:500; }
-  .day h3 { margin:0 0 4px; font-size:1.05rem; }
-  .day ul { margin:6px 0 0; padding-left:18px; color:var(--muted); font-size:.92rem; }
-  .tag { display:inline-block; font-size:.75rem; padding:2px 8px; border-radius:99px; background:#e4f4f9; color:var(--accent); margin-right:6px; }
-  .tag.free { background:#eef1f4; color:var(--muted); }
-  label.opt { display:flex; align-items:flex-start; gap:8px; cursor:pointer; margin-top:6px; }
-  label.opt input { margin-top:4px; width:18px; height:18px; }
-  select { margin-top:8px; padding:6px; border-radius:8px; border:1px solid var(--line); max-width:100%; }
-  .price { font-weight:700; color:var(--ok); white-space:nowrap; }
-  .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:6px 0; border-bottom:1px dashed var(--line); }
+
+  :root { --sand:#fff6e3; --ink:#12303b; --muted:#5b747c; --sun:#ffc93c; --coral:#ff6b4a; --pink:#ff4f9a; --teal:#00b4c5; --palm:#1fb56b; --ok:#0f9d63; --line:#f3dcb0; --accent:#ff6b4a; --card:#ffffffd9; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:ui-rounded,'SF Pro Rounded',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; color:var(--ink); line-height:1.45; background:linear-gradient(180deg,#fff6e3 0%,#ffe8c6 45%,#d6f5f1 100%); background-attachment:fixed; }
+  a { color:#d9441f; }
+  .note { font-size:.85rem; color:var(--muted); }
+  .scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* Hero */
+  header.hero { position:relative; overflow:hidden; color:#fff; text-align:center; padding:calc(env(safe-area-inset-top) + 30px) 16px 84px; background:linear-gradient(180deg,#ffd95c 0%,#ff9d4d 42%,#ff5f8f 100%); }
+  .hero h1 { position:relative; z-index:2; margin:0 0 6px; font-size:clamp(1.9rem,7vw,2.8rem); letter-spacing:-.5px; text-shadow:0 3px 0 rgba(0,0,0,.16); }
+  .hero p { position:relative; z-index:2; margin:3px 0; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.22); }
+  .hero .pill { position:relative; z-index:2; display:inline-block; margin-top:10px; padding:6px 14px; border-radius:99px; background:#ffffff38; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid #ffffff66; font-weight:800; font-size:.9rem; }
+  .sun { position:absolute; top:-50px; right:-40px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,#fffbc2 0%,#ffe45c 50%,rgba(255,228,92,0) 72%); animation:glow 4s ease-in-out infinite alternate; }
+  @keyframes glow { from { transform:scale(1); opacity:.9; } to { transform:scale(1.14); opacity:1; } }
+  .palm { position:absolute; bottom:20px; width:118px; z-index:1; animation:sway 5s ease-in-out infinite alternate; transform-origin:50% 100%; }
+  .palm.l { left:-16px; }
+  .palm.r { right:-12px; width:100px; animation-delay:-2s; transform:scaleX(-1); }
+  @keyframes sway { from { rotate:-3deg; } to { rotate:3deg; } }
+  .wave { position:absolute; left:0; right:0; bottom:-1px; width:100%; height:48px; z-index:3; }
+  .float { position:absolute; z-index:0; font-size:1.7rem; opacity:.45; animation:bob 5s ease-in-out infinite alternate; user-select:none; }
+  @keyframes bob { from { transform:translateY(0) rotate(-6deg); } to { transform:translateY(-12px) rotate(8deg); } }
+  .emojis { position:relative; z-index:2; font-size:1.7rem; letter-spacing:8px; margin-top:12px; cursor:pointer; user-select:none; }
+  .rain { position:fixed; top:-30px; z-index:60; font-size:1.8rem; pointer-events:none; animation:fall 2.2s ease-in forwards; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(360deg); opacity:.8; } }
+
+  /* Navegación pegajosa (glass) */
+  .nav { position:sticky; top:0; z-index:30; background:#fff6e3b8; backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4); border-bottom:1px solid #ffffffaa; padding-top:env(safe-area-inset-top); box-shadow:0 6px 20px rgba(255,140,60,.15); }
+  .nav .row { display:flex; gap:8px; overflow-x:auto; padding:8px 12px; scrollbar-width:none; }
+  .nav .row::-webkit-scrollbar { display:none; }
+  .chipnav { flex:none; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:99px; background:#fff; border:1px solid var(--line); color:var(--ink); font-weight:800; font-size:.85rem; text-decoration:none; transition:transform .15s, background .15s; }
+  .chipnav:active { transform:scale(.94); }
+  .chipnav.on { background:linear-gradient(135deg,var(--coral),var(--pink)); color:#fff; border-color:transparent; }
+  .chipnav small { font-weight:600; opacity:.75; }
+
+  main { max-width:880px; margin:0 auto; padding:6px 14px 130px; }
+  section { scroll-margin-top:118px; }
+  h2 { margin:30px 0 12px; font-size:1.25rem; display:inline-block; padding:6px 16px; border-radius:99px; background:linear-gradient(90deg,var(--sun),#ffb199); color:#5b2a00; box-shadow:0 4px 0 rgba(255,107,74,.35); scroll-margin-top:118px; }
+  .card { background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #ffffffcc; border-radius:24px; padding:16px 18px; margin-bottom:14px; box-shadow:0 10px 26px rgba(255,120,60,.13); }
+
+  /* Hoy en Porto (bento) */
+  .bento { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .tile { border-radius:22px; padding:14px; color:#fff; min-height:104px; position:relative; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,.12); transition:transform .15s; }
+  .tile:active { transform:scale(.97); }
+  .tile .big { font-size:1.9rem; font-weight:900; line-height:1.05; }
+  .tile .lab { font-size:.78rem; font-weight:800; opacity:.9; text-transform:uppercase; letter-spacing:.4px; }
+  .tile .sub { font-size:.8rem; opacity:.95; margin-top:4px; }
+  .tile .em { position:absolute; right:10px; top:6px; font-size:2.1rem; opacity:.95; }
+  .t-now { grid-column:1 / -1; background:linear-gradient(135deg,#ff9d4d,#ff4f9a); }
+  .t-water { background:linear-gradient(135deg,#00b4c5,#2a7de1); }
+  .t-wave { background:linear-gradient(135deg,#2a7de1,#6a5ae0); }
+  .t-uv { background:linear-gradient(135deg,#ffb100,#ff6b4a); }
+  .t-sun { background:linear-gradient(135deg,#ff6b4a,#c2185b); }
+  .t-tide { grid-column:1 / -1; background:linear-gradient(135deg,#1fb56b,#00b4c5); }
+  .refresh { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:10px 2px 0; font-size:.8rem; color:var(--muted); }
+  .refresh button { appearance:none; border:0; border-radius:99px; padding:8px 14px; font-weight:800; background:#fff; border:1px solid var(--line); color:var(--ink); cursor:pointer; }
+  .refresh button:active { transform:scale(.94); }
+  .spin { animation:rot .8s linear infinite; display:inline-block; }
+  @keyframes rot { to { transform:rotate(360deg); } }
+
+  /* Vuelos */
+  .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:8px 0; border-bottom:1px dashed var(--line); }
   .flight small { grid-column:2 / 4; color:var(--muted); }
-  .hl { background:#fff3cd; color:#7a4b00; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap; }
-  .k { display:inline-block; background:#e4f4f9; color:#0a5f78; padding:2px 10px; border-radius:6px; margin:2px 6px 2px 0; font-size:.95rem; }
+  .flight:last-child { border-bottom:0; }
+  .hl { background:#fff0b3; color:#7a4b00; font-weight:800; padding:2px 10px; border-radius:99px; white-space:nowrap; }
+  .k { display:inline-block; background:#d9f6f9; color:#06626d; padding:2px 10px; border-radius:99px; margin:2px 6px 2px 0; font-size:.9rem; font-weight:700; }
   .k.na { background:#eef1f4; color:var(--muted); font-weight:500; }
-  .btn { appearance:none; border:0; border-radius:10px; padding:12px 16px; font-size:1rem; font-weight:600; background:var(--accent); color:#fff; cursor:pointer; min-height:44px; }
-  .btn.sec { background:#eef1f4; color:var(--ink); }
+  .pending { color:#b26a00; }
+
+  /* Botones */
+  .btn { appearance:none; border:0; border-radius:16px; padding:12px 16px; font-size:1rem; font-weight:800; background:linear-gradient(135deg,var(--coral),var(--pink)); color:#fff; cursor:pointer; min-height:46px; box-shadow:0 6px 14px rgba(255,79,154,.3); transition:transform .12s; }
+  .btn:active { transform:scale(.96); }
+  .btn.sec { background:#eef1f4; color:var(--ink); box-shadow:none; }
   .btn.big { width:100%; padding:16px; font-size:1.05rem; }
-  #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
+
+  /* Días (acordeón) */
+  details.day { background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-radius:24px; margin-bottom:12px; border:1px solid #ffffffcc; box-shadow:0 10px 26px rgba(255,120,60,.13); border-left:8px solid var(--coral); overflow:hidden; scroll-margin-top:118px; }
+  details.day.c1 { border-left-color:var(--teal); }
+  details.day.c2 { border-left-color:var(--pink); }
+  details.day.today { box-shadow:0 0 0 3px var(--sun), 0 10px 26px rgba(255,120,60,.2); }
+  details.day summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 14px; min-height:64px; }
+  details.day summary::-webkit-details-marker { display:none; }
+  .date { flex:none; width:58px; height:58px; padding-top:9px; text-align:center; color:#fff; font-weight:900; font-size:1rem; line-height:1.1; border-radius:50%; background:linear-gradient(135deg,var(--coral),var(--pink)); box-shadow:0 4px 10px rgba(255,79,154,.35); }
+  .date small { display:block; font-weight:700; opacity:.95; font-size:.72rem; }
+  .sm { flex:1; min-width:0; }
+  .sm h3 { margin:0; font-size:1.05rem; }
+  .meta { font-size:.8rem; color:var(--muted); margin-top:2px; }
+  .chev { flex:none; font-size:1.2rem; transition:transform .2s; color:var(--coral); }
+  details[open] .chev { transform:rotate(180deg); }
+  .dbody { padding:0 16px 16px; }
+  .tag { display:inline-block; font-size:.72rem; font-weight:800; padding:2px 10px; border-radius:99px; background:#d4f7e8; color:#0b7a5a; margin-right:6px; }
+  .tag.free { background:#ffe0ec; color:#b02a66; }
+  label.opt { display:flex; align-items:flex-start; gap:10px; cursor:pointer; margin-top:10px; padding:10px 12px; border-radius:16px; background:#fff7e6; border:1px dashed #ffc98a; }
+  label.opt input { margin-top:3px; width:22px; height:22px; accent-color:var(--coral); }
+  select { margin-top:8px; padding:10px; border-radius:12px; border:1px solid var(--line); max-width:100%; font-size:.95rem; background:#fff; }
+  .price { font-weight:900; color:var(--ok); white-space:nowrap; }
+  .wx { font-size:.85rem; color:#7a4b00; background:#fff0b3; border-radius:14px; padding:8px 12px; margin:10px 0 6px; }
+  .tide { font-size:.85rem; color:#06626d; background:#d3f5f8; border-radius:14px; padding:8px 12px; margin:6px 0; }
+  .hours { display:flex; gap:6px; overflow-x:auto; margin:6px 0; padding-bottom:2px; }
+  .hr { flex:1 0 58px; text-align:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:6px 4px; font-size:.75rem; }
+  .hr b { display:block; font-size:.78rem; }
+  .hr .e { font-size:1.2rem; }
+  .tl2 { margin-top:10px; border-left:3px dashed var(--sun); padding-left:12px; }
+  .blk { display:flex; gap:10px; padding:7px 0; font-size:.93rem; }
+  .bt { min-width:52px; font-weight:900; color:var(--coral); }
+  .blk .bx { flex:1; }
+  .mealtag { display:inline-block; background:#ffe0ec; color:#a3235f; font-size:.78rem; font-weight:800; padding:1px 8px; border-radius:99px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .chip { display:inline-flex; align-items:center; border:1px solid #ffd2a8; border-radius:99px; overflow:hidden; font-size:.82rem; background:#fff; }
+  .chip a { padding:7px 11px; text-decoration:none; color:var(--ink); }
+  .chip .cp { appearance:none; border:0; border-left:1px solid #ffd2a8; background:#fff0e0; padding:7px 11px; font-size:.78rem; font-weight:800; cursor:pointer; color:var(--coral); }
+
+  /* Tablas */
+  table { width:100%; border-collapse:collapse; font-size:.95rem; }
+  td { padding:7px 0; border-bottom:1px solid var(--line); }
+  td:last-child { text-align:right; }
+  table.grid { font-size:.85rem; }
+  table.grid th { text-align:left; font-size:.72rem; color:var(--muted); padding:4px 6px 4px 0; border-bottom:2px solid var(--line); text-transform:uppercase; letter-spacing:.3px; }
+  table.grid td { padding:7px 6px 7px 0; text-align:left; vertical-align:top; }
+  table.dur td:first-child { font-weight:700; }
+  .src { font-size:.78rem; color:var(--muted); }
+
+  /* Barra de total */
+  .total { position:fixed; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); max-width:860px; margin:0 auto; z-index:40; display:flex; justify-content:space-around; gap:10px; flex-wrap:wrap; padding:10px 16px; border-radius:22px; color:#fff; font-size:.82rem; font-weight:700; background:linear-gradient(135deg,#00b4c5cc,#1fb56bcc); backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4); border:1px solid #ffffff88; box-shadow:0 10px 26px rgba(0,0,0,.2); }
+  .total strong { display:block; font-size:1.05rem; }
+  .toast { position:fixed; left:50%; bottom:100px; transform:translateX(-50%); background:#12303b; color:#fff; padding:8px 16px; border-radius:99px; font-weight:700; z-index:70; font-size:.85rem; }
+
+  @media (min-width:700px) { .bento { grid-template-columns:repeat(4,1fr); } .t-now { grid-column:span 2; } .t-tide { grid-column:span 2; } }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+﻿  #viewer { position:fixed; inset:0; background:#f2f2f7; z-index:50; display:none; flex-direction:column; color:#1c0f5a; }
   #viewer.on { display:flex; }
   #viewer .top { display:flex; align-items:center; background:#fff; padding-top:env(safe-area-inset-top); border-bottom:1px solid #e3e3ea; }
   #viewer .arrow { appearance:none; border:0; background:none; font-size:1.6rem; padding:10px 14px; color:#1c0f5a; cursor:pointer; }
@@ -82,15 +184,8 @@
   table.grid th { text-align:left; font-size:.75rem; color:var(--muted); padding:4px 6px 4px 0; border-bottom:1px solid var(--line); }
   table.grid td { padding:6px 6px 6px 0; text-align:left; vertical-align:top; }
   table.grid td:last-child { text-align:left; }
-  .scroll { overflow-x:auto; }  .flight:last-child { border-bottom:0; }
-  .pending { color:#b26a00; }
-  table { width:100%; border-collapse:collapse; font-size:.95rem; }
-  td { padding:6px 0; border-bottom:1px solid var(--line); }
-  td:last-child { text-align:right; }
-  .total { position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:#fff; padding:12px 16px; display:flex; justify-content:center; gap:24px; flex-wrap:wrap; font-size:.95rem; }
-  .total strong { font-size:1.15rem; }
-  a { color:var(--accent); }
-  .note { font-size:.85rem; color:var(--muted); }
+  .scroll { overflow-x:auto; }
+
 </style>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -101,14 +196,59 @@
 <meta name="theme-color" content="#0a8fb5">
 </head>
 <body>
-<header>
-  <h1>Porto de Galinhas 🌴</h1>
-  <p>20/11/2026 al 28/11/2026 · 2 personas</p>
-  <p>Ora Beach Residence, R. Angelim, Porto de Galinhas, Ipojuca - PE</p>
+<header class="hero">
+  <div class="sun"></div>
+  <span class="float" style="left:4%;top:150px;animation-delay:-1s">🥥</span>
+  <span class="float" style="right:5%;top:150px;animation-delay:-3s">🍹</span>
+  <span class="float" style="left:50%;top:24px;animation-delay:-2s">🍍</span>
+  <svg class="palm l" viewBox="0 0 100 150" aria-hidden="true"><use href="#palmsym"/></svg>
+  <svg class="palm r" viewBox="0 0 100 150" aria-hidden="true"><use href="#palmsym"/></svg>
+  <h1>¡Porto de Galinhas! 🌴</h1>
+  <p>20/11/2026 al 28/11/2026 · vacaciones de a dos 💕</p>
+  <p>Ora Beach Residence · R. Angelim · Ipojuca, PE</p>
+  <div class="pill" id="daybadge">☀️ Cuenta regresiva…</div>
+  <div class="emojis" id="emojiRain" title="Tocá para festejar">☀️ 🍹 🏖️ 🥥 🌊</div>
+  <svg class="wave" viewBox="0 0 1200 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 24 C150 52 300 -6 450 24 C600 52 750 -6 900 24 C1050 52 1150 8 1200 22 L1200 48 L0 48Z" fill="#fff6e3"/></svg>
 </header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="palmsym" viewBox="0 0 100 150">
+      <path d="M52 148 C46 110 58 78 50 42" stroke="#8a5a2b" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <g fill="#1f9e5a">
+        <path id="leaf" d="M50 42 Q72 16 104 36 Q76 32 50 42Z"/>
+        <use href="#leaf" transform="rotate(-50 50 42)"/>
+        <use href="#leaf" transform="rotate(-100 50 42)"/>
+        <use href="#leaf" transform="rotate(40 50 42)"/>
+        <use href="#leaf" transform="rotate(85 50 42)"/>
+        <use href="#leaf" transform="translate(100 0) scale(-1 1)"/>
+        <use href="#leaf" transform="translate(100 0) scale(-1 1) rotate(-50 50 42)"/>
+        <use href="#leaf" transform="translate(100 0) scale(-1 1) rotate(40 50 42)"/>
+      </g>
+      <circle cx="46" cy="46" r="4" fill="#6b3f1b"/><circle cx="54" cy="47" r="4" fill="#6b3f1b"/>
+    </symbol>
+  </defs>
+</svg>
+<nav class="nav" aria-label="Navegación">
+  <div class="row" id="navTop">
+    <a class="chipnav" href="#hoy">🌴 Hoy</a>
+    <a class="chipnav" href="#vuelos">✈️ Vuelos</a>
+    <a class="chipnav" href="#tarjetas">🎫 Tarjetas</a>
+    <a class="chipnav" href="#dias">🗓️ Días</a>
+    <a class="chipnav" href="#clima">☀️ Clima</a>
+    <a class="chipnav" href="#mareas">🌊 Mareas</a>
+    <a class="chipnav" href="#resumen">💵 Pesos</a>
+  </div>
+  <div class="row" id="navDays"></div>
+</nav>
 
 <main>
-  <h2>✈️ Vuelos de ida (20/11)</h2>
+  <section id="hoy">
+    <h2>🌴 Hoy en Porto</h2>
+    <div class="bento" id="today"></div>
+    <div class="refresh"><span id="liveStamp">Cargando clima…</span><button id="refreshBtn" type="button"><span id="refreshIco">↻</span> Actualizar</button></div>
+  </section>
+
+  <h2 id="vuelos">✈️ Vuelos de ida (20/11)</h2>
   <div class="card">
     <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span class="hl">Embarque 11:35</span><small><b class="k">Terminal 1</b> <b class="k">Puerta 3</b> <b class="k">Grupo 5</b></small></div>
     <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span class="hl">Embarque 17:45</span><small><b class="k">Terminal 2</b> <b class="k na">Puerta sin asignar</b> <b class="k">Grupo 4</b></small></div>
@@ -116,36 +256,36 @@
     <p class="note">Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
   </div>
 
-  <h2>🎫 Tarjetas de embarque</h2>
+  <h2 id="tarjetas">🎫 Tarjetas de embarque</h2>
   <div class="card">
     <button class="btn big" id="openPasses">Abrir tarjetas de embarque</button>
     <p class="note">Las capturas se guardan solo en este teléfono (no se suben a internet). La primera vez cargás cada captura con "Cargar captura". Subí capturas de pantalla (imagen), no PDF. Guardá también las tarjetas en la app de LATAM o en Apple Wallet como respaldo.</p>
   </div>
 
-  <h2>✈️ Vuelos de vuelta (28/11)</h2>
+  <h2 id="vuelta">✈️ Vuelos de vuelta (28/11)</h2>
   <div class="card">
     <div class="flight"><b>G3 7618</b><span>Recife (REC) 28/11 18:15 → Córdoba (COR) 29/11 00:05</span><span class="hl">Salida 18:15</span><small>Directo · GOL · Boeing 737-8 Max · 5 h 50 min</small></div>
     <p class="note pending">Faltan terminal, puerta y grupo de embarque. Se publican cerca de la salida. Recomendación: estar en el aeropuerto de Recife 3 horas antes (15:15), saliendo del hotel alrededor de las 14:00.</p>
   </div>
 
-  <h2>🗓️ Itinerario por día</h2>
+  <h2 id="dias">🗓️ Itinerario por día</h2>
   <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados por Diogo (<a href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">sitio</a>) en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
   <div id="days"></div>
 
-  <h2>☀️ Clima y sol</h2>
+  <h2 id="clima">☀️ Clima y sol</h2>
   <div class="card">
     <div id="wxTable"></div>
     <p class="note" id="wxNote"></p>
     <p class="note">Con índice UV de 8 a 10 la exposición es muy alta: usar protector 50+, gorra y lentes, y evitar el sol entre las 10 y las 15 h. Fuente: Open-Meteo (pronóstico). Se actualiza solo cuando abrís la página con internet.</p>
   </div>
 
-  <h2>🌊 Mareas y piscinas naturales</h2>
+  <h2 id="mareas">🌊 Mareas y piscinas naturales</h2>
   <div class="card">
     <div id="tideTable"></div>
     <p class="note" id="tideNote"></p>
     <p class="note">Las piscinas de jangada de Porto de Galinhas aparecen cuando la marea baja de 0,6 m, en la hora y media antes y después de la baja-mar. En Muro Alto la piscina natural existe todo el día. Oficial: Marinha do Brasil, estación Porto de Suape (publicada por <a href="https://samoaresort.com.br/natureza/tabua-de-mares" target="_blank" rel="noopener">Samoa Resort</a>). La columna "Modelo" sale del modelo marino de <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a>, con precisión de ±1 h, y sirve para los días sin tabla oficial. También podés consultar <a href="https://tablademareas.com/br/pernambuco/porto-de-galinhas" target="_blank" rel="noopener">tablademareas.com</a> (esa página carga los datos con JavaScript y no tiene API pública).</p>
   </div>
-  <h2>⏱️ Duración de cada excursión</h2>
+  <h2 id="duracion">⏱️ Duración de cada excursión</h2>
   <div class="card">
     <table class="dur">
       <tr><td>Buggy Ponta a Ponta</td><td>4 h</td></tr>
@@ -157,7 +297,7 @@
     <p class="note">Los tiempos de buggy, buceo y Santo Aleixo salen del sitio de Diogo y de GetYourGuide. Maragogi queda a 85-90 km (entre 1 h 20 y 2 h de viaje por tramo) y el regreso suele ser antes de las 16:00. Carneiros está a 50-60 km (cerca de 1 h). Las horas exactas las define Diogo según la marea.</p>
   </div>
 
-  <h2>🏖️ Playas de aguas tranquilas</h2>
+  <h2 id="playas">🏖️ Playas de aguas tranquilas</h2>
   <div class="card">
     <p><b>Frente al departamento (Merepe/Maracaípe).</b> Está a 2-5 min a pie del mar. En esta zona hay olas medias a fuertes, mejor para caminar por la orilla que para nadar.</p>
     <p><b>Pontal de Maracaípe.</b> Extremo sur, aguas bajas, calmas y claras. Desde Maracaípe son unos 20 min caminando por la arena. <span class="chips">${chipSlot:pontalMar}</span></p>
@@ -167,12 +307,7 @@
     <p class="note">Maracaípe y el Cupe tienen olas fuertes en general. Las piscinas de jangada solo aparecen alrededor de la marea baja (marea medida en Porto de Suape). Consultá la recepción antes de entrar al agua.</p>
   </div>
 
-  <h2>📍 Puntos GPS</h2>
-  <div class="card">
-    <p class="note">Tocá el nombre para abrir el mapa o "Copiar" para copiar las coordenadas. Las coordenadas son de OpenStreetMap y pueden estar a unos cientos de metros del punto exacto. Verificalas en el mapa antes de salir.</p>
-    <div id="gps"></div>
-  </div>
-  <h2>💰 Resumen</h2>
+  <h2 id="resumen">💰 Resumen</h2>
   <div class="card">
     <table id="summary"></table>
     <p class="note">No incluye comidas, propinas, transfer aeropuerto ni el alojamiento.</p>
@@ -181,10 +316,11 @@
     <p class="note" id="fxNote"></p>
   </div>
 
-  <h2>📞 Contacto</h2>
+  <h2 id="contacto">📞 Contacto</h2>
   <div class="card">
     <a href="https://wa.me/5581997148594?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20valores%20e%20disponibilidade%20dos%20passeios%20em%20Porto%20de%20Galinhas." target="_blank" rel="noopener">Diogo Ferreira · WhatsApp +55 81 99714-8594</a>
   </div>
+<div class="card" style="text-align:center;background:linear-gradient(135deg,#fff0b3cc,#ffd0e0cc)"><div style="font-size:2rem;letter-spacing:8px">🍹🌴☀️🥥🍍</div><b>¡Buen viaje y a disfrutar!</b><div class="note">Hecho con cariño para unas vacaciones de película.</div></div>
 </main>
 
 <div class="total">
@@ -359,48 +495,80 @@ async function copyToClipboard(text) {
     let ok = false; try { ok = document.execCommand('copy'); } catch (_) {} ta.remove(); return ok;
   }
 }
+function showToast(msg) {
+  const x = document.createElement('div'); x.className = 'toast'; x.textContent = msg; document.body.appendChild(x);
+  setTimeout(() => x.remove(), 1400);
+}
 function bindCopy(root) {
   root.querySelectorAll('button[data-copy]').forEach(b => b.onclick = async () => {
     const ok = await copyToClipboard(b.dataset.copy);
-    const old = b.textContent; b.textContent = ok ? 'Copiado' : 'Error'; setTimeout(() => b.textContent = old, 1200);
+    showToast(ok ? 'Copiado ✔' : 'No se pudo copiar');
   });
+}
+
+const dayId = d => 'day-' + d.date.slice(0, 2);
+const recifeToday = () => new Date().toLocaleDateString('en-CA', { timeZone:'America/Recife' });
+const tripToday = () => { const k = recifeToday(); return days.some(d => '2026-11-' + d.date.slice(0, 2) === k) ? k : null; };
+let openDays = new Set(JSON.parse(sessionStorage.getItem('openDays') || 'null') || [tripToday() ? 'day-' + tripToday().slice(8) : 'day-20']);
+const saveOpen = () => sessionStorage.setItem('openDays', JSON.stringify([...openDays]));
+
+function hourStrip(d) {
+  const hs = HOURLY[DKEY(d)];
+  if (!hs || !hs.length) return '';
+  return '<div class="hours">' + hs.map(h => '<div class="hr"><b>' + h.h + ' h</b><div class="e">' + WMO(h.code)[0] + '</div>' + h.temp + '°<br>' + h.pp + '%</div>').join('') + '</div>';
 }
 
 function render() {
   const el = document.getElementById('days');
-  el.innerHTML = '';
-  days.forEach(d => {
+  const todayK = tripToday();
+  let all = '';
+  days.forEach((d, idx) => {
     const active = d.items.filter(i => isOn(i.id));
     const free = d.items.length > 0 && active.length === 0;
-    const div = document.createElement('div');
-    div.className = 'card day';
-    let html = `<div class="date">${d.date}<small>${d.dow}</small></div><div style="flex:1"><h3>${free ? 'Día libre' : d.title}</h3>`;
-    html += `<span class="tag ${(d.items.length === 0 || free) ? 'free' : ''}">${d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión'}</span>`;
-    html += wxLine(d) + tideLine(d);
+    const w = WX[DKEY(d)];
+    const meta = [w ? WMO(w.code)[0] + ' ' + w.tmax + '°' : '', d.items.length === 0 ? 'sin excursión' : free ? 'día libre' : 'excursión'].filter(Boolean).join(' · ');
+    let html = '<details class="day c' + (idx % 3) + (todayK === DKEY(d) ? ' today' : '') + '" id="' + dayId(d) + '"' + (openDays.has(dayId(d)) ? ' open' : '') + '>';
+    html += '<summary><div class="date">' + d.date.slice(0, 2) + '<small>' + d.dow + '</small></div><div class="sm"><h3>' + (free ? 'Día libre' : d.title) + '</h3><div class="meta">' + meta + '</div></div><span class="chev">▾</span></summary><div class="dbody">';
+    html += '<span class="tag ' + ((d.items.length === 0 || free) ? 'free' : '') + '">' + (d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión') + '</span>';
+    html += wxLine(d) + hourStrip(d) + tideLine(d);
     d.items.forEach(i => {
       const price = itemPrice(i);
-      html += `<label class="opt"><input type="checkbox" data-id="${i.id}" ${isOn(i.id) ? 'checked' : ''}><span>${i.name} <span class="price">${fmt(price)}${i.perPerson ? ' (2 pers.)' : ' (vehículo)'}</span></span></label>`;
+      html += '<label class="opt"><input type="checkbox" data-id="' + i.id + '" ' + (isOn(i.id) ? 'checked' : '') + '><span>' + i.name + ' <span class="price">' + fmt(price) + (i.perPerson ? ' (2 pers.)' : ' (vehículo)') + '</span></span></label>';
       if (i.options) {
-        html += `<select data-opt="${i.id}">` + i.options.map((o, k) => `<option value="${k}" ${(state['opt_'+i.id]||0)==k?'selected':''}>${o.label} · R$ ${o.price} p/p</option>`).join('') + `</select>`;
+        html += '<select data-opt="' + i.id + '">' + i.options.map((o, k) => '<option value="' + k + '" ' + ((state['opt_' + i.id] || 0) == k ? 'selected' : '') + '>' + o.label + ' · R$ ' + o.price + ' p/p</option>').join('') + '</select>';
       }
     });
     html += '<div class="tl2">';
     d.blocks.forEach(b => {
       if (b.alt && !free) return;
       if (b.ex && !isOn(b.ex)) return;
-      html += `<div class="blk${b.meal ? ' meal' : ''}"><div class="bt">${b.t}</div><div class="bx">${b.meal && b.txt ? '' : ''}${b.txt}${b.meal ? ` <span class="mealtag">🍽️ ${b.meal}</span>` : ''}`;
+      html += '<div class="blk' + (b.meal ? ' meal' : '') + '"><div class="bt">' + b.t + '</div><div class="bx">' + b.txt + (b.meal ? ' <span class="mealtag">🍽️ ' + b.meal + '</span>' : '');
       if (b.places) html += '<div class="chips">' + b.places.map(chip).join('') + '</div>';
       html += '</div></div>';
     });
-    html += '</div></div>';
-    div.innerHTML = html;
-    el.appendChild(div);
+    html += '</div></div></details>';
+    all += html;
   });
+  el.innerHTML = all;
+  el.querySelectorAll('details.day').forEach(x => x.addEventListener('toggle', () => { x.open ? openDays.add(x.id) : openDays.delete(x.id); saveOpen(); }));
   el.querySelectorAll('input[data-id]').forEach(c => c.onchange = () => { state[c.dataset.id] = c.checked; save(); render(); });
-  el.querySelectorAll('select[data-opt]').forEach(s => s.onchange = () => { state['opt_'+s.dataset.opt] = +s.value; save(); render(); });
+  el.querySelectorAll('select[data-opt]').forEach(s => s.onchange = () => { state['opt_' + s.dataset.opt] = +s.value; save(); render(); });
   bindCopy(el);
+  renderNavDays();
   summary();
 }
+
+function renderNavDays() {
+  const nav = document.getElementById('navDays');
+  const todayK = tripToday();
+  nav.innerHTML = days.map(d => '<a class="chipnav' + (todayK === DKEY(d) ? ' on' : '') + '" href="#' + dayId(d) + '" data-day="' + dayId(d) + '">' + d.date.slice(0, 2) + ' <small>' + d.dow + '</small></a>').join('');
+  nav.querySelectorAll('a[data-day]').forEach(a => a.onclick = ev => {
+    ev.preventDefault();
+    const x = document.getElementById(a.dataset.day);
+    if (x) { x.open = true; x.scrollIntoView({ behavior:'smooth', block:'start' }); }
+  });
+}
+
 function unit(i) { return i.options ? i.options[state['opt_'+i.id] || 0].price : i.price; }
 function itemPrice(i) { return unit(i) * (i.perPerson ? PEOPLE : 1); }
 
@@ -425,7 +593,6 @@ function summary() {
 
 function fillSections() {
   document.querySelectorAll('.chips').forEach(c => { c.innerHTML = c.innerHTML.replace(/\$\{chipSlot:(\w+)\}/g, (_, id) => chip(id)); });
-  document.getElementById('gps').innerHTML = Object.keys(PLACES).map(id => `<div style="margin:6px 0">${chip(id)}${PLACES[id].lat !== undefined ? ` <span class="note">${PLACES[id].lat}, ${PLACES[id].lng}</span>` : ''}</div>`).join('');
   bindCopy(document);
 }
 fillSections();
@@ -488,27 +655,105 @@ function lowsFromHourly(time, h) {
   }
   return out;
 }
-async function loadLive() {
+
+let HOURLY = {}, CUR = null, MAR = null, liveAt = null, refreshing = false;
+const toMin = s => { const [h, m] = s.split(':'); return +h * 60 + +m; };
+const fmtMin = m => { const h = Math.floor(m / 60), mm = m % 60; return h + ' h ' + String(mm).padStart(2, '0') + ' min'; };
+
+function renderToday() {
+  const box = document.getElementById('today');
+  if (!box) return;
+  if (!CUR) { box.innerHTML = '<div class="card" style="grid-column:1/-1">Todavía no hay datos del clima. Conectate a internet y tocá Actualizar.</div>'; return; }
+  const k = CUR.time.slice(0, 10), now = toMin(CUR.time.slice(11, 16));
+  const day = days.find(d => DKEY(d) === k);
+  const w = WX[k];
+  const [e, txt] = WMO(CUR.weather_code);
+  let sunTxt = '—', sunSub = '';
+  if (w) {
+    const sr = toMin(w.sr), ss = toMin(w.ss);
+    if (now < sr) { sunTxt = w.sr; sunSub = 'Amanece en ' + fmtMin(sr - now); }
+    else if (now < ss) { sunTxt = fmtMin(ss - now); sunSub = 'para el atardecer (' + w.ss + ')'; }
+    else { sunTxt = w.ss; sunSub = 'El sol ya se fue'; }
+  }
+  let tideTxt = 'Fuera de las fechas del viaje', tideSub = '';
+  if (day) {
+    const o = OFFICIAL[day.date];
+    let lows = o ? o.low.map(s => s.split(' ')[0]) : (MODEL[k] || []).map(s => s.split(' ')[0]);
+    const next = lows.find(x => toMin(x) >= now);
+    tideTxt = next ? 'Baja-mar ' + next : 'Hoy ya pasó la baja-mar';
+    tideSub = o ? 'Piscinas de jangada visibles ' + o.win + ' (oficial)' : 'Estimado por modelo, ±1 h';
+  }
+  const uvNow = CUR.uv_index, uvMax = w ? w.uv : null;
+  box.innerHTML =
+    '<div class="tile t-now"><div class="em">' + e + '</div><div class="lab">Ahora en Porto</div><div class="big">' + Math.round(CUR.temperature_2m) + '°</div><div class="sub">' + txt + ' · sensación ' + Math.round(CUR.apparent_temperature) + '° · humedad ' + CUR.relative_humidity_2m + '% · viento ' + Math.round(CUR.wind_speed_10m) + ' km/h</div></div>' +
+    '<div class="tile t-water"><div class="em">🌡️</div><div class="lab">Agua</div><div class="big">' + (MAR && MAR.sea_surface_temperature != null ? MAR.sea_surface_temperature.toFixed(1) + '°' : '—') + '</div><div class="sub">temperatura del mar</div></div>' +
+    '<div class="tile t-wave"><div class="em">🌊</div><div class="lab">Olas</div><div class="big">' + (MAR && MAR.wave_height != null ? MAR.wave_height.toFixed(1).replace('.', ',') + ' m' : '—') + '</div><div class="sub">altura en mar abierto</div></div>' +
+    '<div class="tile t-uv"><div class="em">🧴</div><div class="lab">UV</div><div class="big">' + (CUR.is_day ? Math.round(uvNow * 10) / 10 : 'noche') + '</div><div class="sub">' + (uvMax != null ? 'máximo hoy ' + uvMax + ' (' + uvLabel(uvMax) + '), protector 50+' : '') + '</div></div>' +
+    '<div class="tile t-sun"><div class="em">🌅</div><div class="lab">Sol</div><div class="big" style="font-size:1.4rem">' + sunTxt + '</div><div class="sub">' + sunSub + '</div></div>' +
+    '<div class="tile t-tide"><div class="em">🐚</div><div class="lab">Marea</div><div class="big" style="font-size:1.4rem">' + tideTxt + '</div><div class="sub">' + tideSub + (MAR && MAR.sea_level_height_msl != null ? ' · nivel del mar ahora ' + MAR.sea_level_height_msl.toFixed(2).replace('.', ',') + ' m' : '') + '</div></div>';
+}
+
+function updateStamp() {
+  const s = document.getElementById('liveStamp');
+  if (!s) return;
+  if (!liveAt) { s.textContent = 'Sin datos en vivo todavía'; return; }
+  const mins = Math.max(0, Math.round((Date.now() - liveAt) / 60000));
+  s.textContent = 'Clima y mareas actualizados ' + (mins < 1 ? 'recién' : 'hace ' + mins + ' min') + ' · se refresca solo cada 15 min';
+}
+
+function applyLive() {
+  renderToday(); renderWxTables(); render(); updateStamp(); updateBadge();
+}
+
+async function refreshLive() {
+  if (refreshing) return;
+  refreshing = true;
+  const ico = document.getElementById('refreshIco'); if (ico) ico.classList.add('spin');
   try {
-    const cached = JSON.parse(localStorage.getItem('live') || 'null');
-    if (cached) { WX = cached.WX; MODEL = cached.MODEL; liveInfo = 'Última actualización: ' + cached.at; }
-  } catch (_) {}
-  renderWxTables(); render();
-  try {
-    const wxUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-8.5008&longitude=-35.003&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,uv_index_max,sunrise,sunset,wind_speed_10m_max&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28';
-    const mUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=-8.5&longitude=-34.99&hourly=sea_level_height_msl&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28&cell_selection=sea';
+    const wxUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-8.5008&longitude=-35.003&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,uv_index_max,sunrise,sunset,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,weather_code&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,uv_index,is_day&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28';
+    const mUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=-8.5&longitude=-34.99&hourly=sea_level_height_msl&current=wave_height,sea_surface_temperature,sea_level_height_msl&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28&cell_selection=sea';
     const [w, m] = await Promise.all([fetch(wxUrl).then(r => r.json()), fetch(mUrl).then(r => r.json())]);
     const d = w.daily, nw = {};
     d.time.forEach((k, i) => nw[k] = { code:d.weather_code[i], tmax:Math.round(d.temperature_2m_max[i]), tmin:Math.round(d.temperature_2m_min[i]), pp:d.precipitation_probability_max[i], mm:d.precipitation_sum[i], uv:Math.round(d.uv_index_max[i]*10)/10, sr:d.sunrise[i].slice(11), ss:d.sunset[i].slice(11), wind:Math.round(d.wind_speed_10m_max[i]) });
+    const hh = {};
+    w.hourly.time.forEach((tm, i) => { const hr = tm.slice(11, 13); if (['06','09','12','15','18'].includes(hr)) (hh[tm.slice(0, 10)] = hh[tm.slice(0, 10)] || []).push({ h:hr, temp:Math.round(w.hourly.temperature_2m[i]), pp:w.hourly.precipitation_probability[i], code:w.hourly.weather_code[i] }); });
     const nm = lowsFromHourly(m.hourly.time, m.hourly.sea_level_height_msl);
     if (Object.keys(nw).length) WX = nw;
     if (Object.keys(nm).length) MODEL = nm;
-    const at = new Date().toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
-    liveInfo = 'Actualizado: ' + at;
-    localStorage.setItem('live', JSON.stringify({ WX, MODEL, at }));
-    renderWxTables(); render();
-  } catch (e) { /* sin internet: queda el respaldo o el último dato guardado */ }
+    HOURLY = hh; CUR = w.current; MAR = m.current; liveAt = Date.now();
+    liveInfo = 'Actualizado: ' + new Date(liveAt).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
+    localStorage.setItem('live2', JSON.stringify({ WX, MODEL, HOURLY, CUR, MAR, liveAt }));
+    applyLive();
+  } catch (e) { updateStamp(); }
+  refreshing = false;
+  if (ico) ico.classList.remove('spin');
 }
+
+function updateBadge() {
+  const b = document.getElementById('daybadge'); if (!b) return;
+  const k = recifeToday(), first = '2026-11-20', last = '2026-11-28';
+  const diff = (a, z) => Math.round((new Date(z + 'T12:00:00Z') - new Date(a + 'T12:00:00Z')) / 86400000);
+  if (k < first) b.textContent = '✈️ Faltan ' + diff(k, first) + ' días para viajar';
+  else if (k <= last) b.textContent = '☀️ Día ' + (diff(first, k) + 1) + ' de 9' + (k === last ? ' · ¡último día!' : ' · quedan ' + diff(k, last) + ' días');
+  else b.textContent = '🌴 ¡Gracias por el viaje!';
+}
+
+function loadLive() {
+  try {
+    const c = JSON.parse(localStorage.getItem('live2') || 'null');
+    if (c) { WX = c.WX; MODEL = c.MODEL; HOURLY = c.HOURLY || {}; CUR = c.CUR; MAR = c.MAR; liveAt = c.liveAt; liveInfo = 'Última actualización: ' + new Date(c.liveAt).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' }); }
+  } catch (_) {}
+  applyLive();
+  refreshLive();
+  setInterval(refreshLive, 15 * 60 * 1000);
+  setInterval(updateStamp, 30 * 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && (!liveAt || Date.now() - liveAt > 5 * 60 * 1000)) refreshLive(); });
+  window.addEventListener('online', refreshLive);
+  const btn = document.getElementById('refreshBtn'); if (btn) btn.onclick = () => { refreshLive(); loadFx(); };
+  const em = document.getElementById('emojiRain');
+  if (em) em.onclick = () => { const set = ['🍹','🌴','🥥','☀️','🍍','🌊','🏖️']; for (let i = 0; i < 16; i++) { const s = document.createElement('span'); s.className = 'rain'; s.textContent = set[i % set.length]; s.style.left = Math.random() * 95 + 'vw'; s.style.animationDelay = (Math.random() * 0.6) + 's'; document.body.appendChild(s); setTimeout(() => s.remove(), 3200); } };
+}
+
 // ---- Cotización en pesos (ComparaPix: https://api.comparapix.ar/quotes) ----
 // Respaldo del 20/11/2026 04:40 (hora de Argentina). "buy" = pesos necesarios para 1 BRL.
 let FX = { cocos:{ rate:291.9566676312, at:'2026-11-20T07:40:01.687Z' }, mp:{ rate:299.46, at:'2026-11-20T07:40:01.543Z' }, live:false };
