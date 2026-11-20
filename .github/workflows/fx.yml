@@ -1,0 +1,26 @@
+﻿name: Actualizar cotizacion
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar cotizacion de ComparaPix
+        run: |
+          curl -fsS https://api.comparapix.ar/quotes -o quotes.json
+          jq '{cocos: {rate: (.cocos.quotes[] | select(.symbol=="BRLARS") | .buy), at: .cocos.updatedAt}, mp: {rate: (.["mercado-pago"].quotes[] | select(.symbol=="BRLARS") | .buy), at: .["mercado-pago"].updatedAt}}' quotes.json > fx.json
+          rm quotes.json
+      - name: Guardar si cambio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fx.json
+          git diff --staged --quiet || (git commit -m "Actualizar cotizacion" && git push)

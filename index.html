@@ -175,9 +175,10 @@
   <h2>💰 Resumen</h2>
   <div class="card">
     <table id="summary"></table>
-    <p class="note">No incluye comidas, propinas, transfer aeropuerto ni el alojamiento. Conversión: ingresá cuántos pesos o dólares equivale 1 BRL.</p>
-    <label>1 BRL = <input id="rate" type="number" min="0" step="0.01" placeholder="cotización"> <span id="rateLabel"></span></label>
-    <div id="converted" class="price"></div>
+    <p class="note">No incluye comidas, propinas, transfer aeropuerto ni el alojamiento.</p>
+    <h3 style="margin:14px 0 6px;font-size:1rem">💵 Precio en pesos (pagando con PIX)</h3>
+    <div id="fx"></div>
+    <p class="note" id="fxNote"></p>
   </div>
 
   <h2>📞 Contacto</h2>
@@ -189,6 +190,7 @@
 <div class="total">
   <span>Total 2 personas: <strong id="totalBRL">R$ 0</strong></span>
   <span>Por persona: <strong id="perPerson">R$ 0</strong></span>
+  <span>En pesos (Cocos): <strong id="arsBar">-</strong></span>
 </div>
 
 <div id="viewer">
@@ -507,12 +509,34 @@ async function loadLive() {
     renderWxTables(); render();
   } catch (e) { /* sin internet: queda el respaldo o el último dato guardado */ }
 }
+// ---- Cotización en pesos (ComparaPix: https://api.comparapix.ar/quotes) ----
+// Respaldo del 20/11/2026 04:40 (hora de Argentina). "buy" = pesos necesarios para 1 BRL.
+let FX = { cocos:{ rate:291.9566676312, at:'2026-11-20T07:40:01.687Z' }, mp:{ rate:299.46, at:'2026-11-20T07:40:01.543Z' }, live:false };
+const ars = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const arsRate = n => '$ ' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
 function convert() {
-  const r = parseFloat(document.getElementById('rate').value);
-  document.getElementById('converted').textContent = r > 0 ? `≈ ${(total * r).toLocaleString('es-AR', {maximumFractionDigits:0})} en tu moneda` : '';
+  const wrap = document.getElementById('fx');
+  if (!wrap) return;
+  const rows = [['Cocos', FX.cocos], ['Mercado Pago', FX.mp]];
+  let h = '<div class="scroll"><table class="grid"><tr><th>App</th><th>1 BRL</th><th>Total (2 pers.)</th><th>Por persona</th></tr>';
+  rows.forEach(([n, q]) => { h += `<tr><td><b>${n}</b></td><td>${arsRate(q.rate)}</td><td><b>${ars(total * q.rate)}</b></td><td>${ars(total / PEOPLE * q.rate)}</td></tr>`; });
+  h += '</table></div>';
+  const diff = (FX.mp.rate - FX.cocos.rate) * total;
+  h += `<p class="note">Con Cocos pagás ${ars(Math.abs(diff))} ${diff >= 0 ? 'menos' : 'más'} que con Mercado Pago por este total.</p>`;
+  wrap.innerHTML = h;
+  document.getElementById('arsBar').textContent = ars(total * FX.cocos.rate);
+  const at = new Date(FX.cocos.at).toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
+  document.getElementById('fxNote').textContent = (FX.live ? 'Cotización de ComparaPix de las ' : 'Última cotización guardada, de las ') + at + '. Es el precio de compra de reales por PIX, se refresca cada ~30 min y cambia durante el día. No incluye comisiones ni impuestos que cobre cada app. Pedile a Diogo su clave o QR de PIX.';
 }
-document.getElementById('rate').value = localStorage.getItem('rate') || '';
-document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.target.value); convert(); };
+async function loadFx() {
+  try { const c = JSON.parse(localStorage.getItem('fx') || 'null'); if (c) FX = Object.assign(FX, c, { live:false }); } catch (_) {}
+  convert();
+  try {
+    // fx.json lo actualiza GitHub Actions cada ~30 min con la API de ComparaPix (la API no permite pedidos directos desde otros sitios)
+    const q = await fetch('fx.json?t=' + Date.now(), { cache:'no-store' }).then(r => { if (!r.ok) throw 0; return r.json(); });
+    if (q.cocos && q.mp) { FX = { cocos:q.cocos, mp:q.mp, live:true }; localStorage.setItem('fx', JSON.stringify({ cocos:q.cocos, mp:q.mp })); convert(); }
+  } catch (_) { /* sin internet: queda la última cotización guardada */ }
+}
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 // ---- Tarjetas de embarque (IndexedDB, solo en el dispositivo) ----
@@ -594,6 +618,7 @@ document.getElementById('vclose').onclick = () => document.getElementById('viewe
 document.getElementById('vprev').onclick = () => { curF = (curF + FLIGHTS.length - 1) % FLIGHTS.length; showPass(); };
 document.getElementById('vnext').onclick = () => { curF = (curF + 1) % FLIGHTS.length; showPass(); };
 loadLive();
+loadFx();
 </script>
 </body>
 </html>
