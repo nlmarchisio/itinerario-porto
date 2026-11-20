@@ -30,6 +30,18 @@
   .hl { background:#fff3cd; color:#7a4b00; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap; }
   .k { display:inline-block; background:#e4f4f9; color:#0a5f78; padding:2px 10px; border-radius:6px; margin:2px 6px 2px 0; font-size:.95rem; }
   .k.na { background:#eef1f4; color:var(--muted); font-weight:500; }
+  .pass { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:8px 0; border-bottom:1px dashed var(--line); }
+  .pass:last-child { border-bottom:0; }
+  .pass .lbl { flex:1; min-width:150px; font-size:.95rem; }
+  .btn { appearance:none; border:0; border-radius:10px; padding:12px 16px; font-size:1rem; font-weight:600; background:var(--accent); color:#fff; cursor:pointer; min-height:44px; }
+  .btn.sec { background:#eef1f4; color:var(--ink); }
+  .btn.off { background:#d5dde4; color:#5d7387; }
+  #viewer { position:fixed; inset:0; background:#fff; z-index:50; display:none; flex-direction:column; }
+  #viewer.on { display:flex; }
+  #viewer .bar { display:flex; gap:8px; padding:10px; padding-top:max(10px, env(safe-area-inset-top)); background:#16324a; color:#fff; align-items:center; }
+  #viewer .bar span { flex:1; font-weight:600; font-size:.95rem; }
+  #viewer .imgwrap { flex:1; overflow:auto; background:#fff; text-align:center; }
+  #viewer img { max-width:100%; height:auto; }
   .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
@@ -57,6 +69,12 @@
     <p class="note">Reserva LATAM: MTMINY. Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
   </div>
 
+  <h2>🎫 Tarjetas de embarque</h2>
+  <div class="card">
+    <p class="note">Se guardan solo en este teléfono (no se suben a internet). Cargá cada captura una vez y después tocá "Abrir" en el aeropuerto. Subí capturas de pantalla (imagen), no PDF.</p>
+    <div id="passes"></div>
+    <p class="note">Respaldo: guardá también las tarjetas en la app de LATAM o en Apple Wallet, por si el navegador borra los datos del sitio.</p>
+  </div>
   <h2>✈️ Vuelos de vuelta (28/11)</h2>
   <div class="card">
     <p class="pending">Pendiente: faltan los datos de los vuelos de regreso. Pasalos y los cargo acá.</p>
@@ -85,6 +103,11 @@
   <span>Por persona: <strong id="perPerson">R$ 0</strong></span>
 </div>
 
+<div id="viewer">
+  <div class="bar"><span id="vtitle"></span><button class="btn sec" id="vreplace">Reemplazar</button><button class="btn sec" id="vclose">Cerrar</button></div>
+  <div class="imgwrap"><img id="vimg" alt="Tarjeta de embarque"></div>
+</div>
+<input type="file" id="picker" accept="image/*" hidden>
 <script>
 const PEOPLE = 2;
 const fmt = n => 'R$ ' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
@@ -172,6 +195,71 @@ function convert() {
 document.getElementById('rate').value = localStorage.getItem('rate') || '';
 document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.target.value); convert(); };
 
+// ---- Tarjetas de embarque (IndexedDB, solo en el dispositivo) ----
+const PASS_FLIGHTS = [
+  { id:'LA8049', label:'LA8049 · COR → GRU · 20/11' },
+  { id:'LA3529', label:'LA3529 · GRU → BSB · 20/11' },
+  { id:'LA3496', label:'LA3496 · BSB → REC · 20/11' }
+];
+const PASS_PEOPLE = [ { id:'nico', name:'Nicolás' }, { id:'novia', name:'Novia' } ];
+
+const dbp = new Promise((res, rej) => {
+  const r = indexedDB.open('itinerario-passes', 1);
+  r.onupgradeneeded = () => r.result.createObjectStore('passes');
+  r.onsuccess = () => res(r.result);
+  r.onerror = () => rej(r.error);
+});
+const idb = async (mode, fn) => { const db = await dbp; return new Promise((res, rej) => { const tx = db.transaction('passes', mode); const rq = fn(tx.objectStore('passes')); tx.oncomplete = () => res(rq && rq.result); tx.onerror = () => rej(tx.error); }); };
+const getPass = k => idb('readonly', s => s.get(k));
+const putPass = (k, v) => idb('readwrite', s => s.put(v, k));
+
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+
+let pendingKey = null, pendingTitle = '';
+const picker = document.getElementById('picker');
+
+async function renderPasses() {
+  const box = document.getElementById('passes');
+  box.innerHTML = '';
+  for (const fl of PASS_FLIGHTS) {
+    for (const p of PASS_PEOPLE) {
+      const key = fl.id + '_' + p.id;
+      const has = !!(await getPass(key));
+      const row = document.createElement('div');
+      row.className = 'pass';
+      row.innerHTML = `<div class="lbl"><b>${p.name}</b><br><span class="note">${fl.label}</span></div>`;
+      const b = document.createElement('button');
+      b.className = 'btn' + (has ? '' : ' off');
+      b.textContent = has ? 'Abrir' : 'Cargar';
+      b.onclick = () => has ? openPass(key, p.name + ' · ' + fl.id) : choose(key, p.name + ' · ' + fl.id);
+      row.appendChild(b);
+      box.appendChild(row);
+    }
+  }
+}
+function choose(key, title) { pendingKey = key; pendingTitle = title; picker.value = ''; picker.click(); }
+picker.onchange = async () => {
+  const file = picker.files[0];
+  if (!file || !pendingKey) return;
+  await putPass(pendingKey, file);
+  const k = pendingKey, t = pendingTitle;
+  await renderPasses();
+  openPass(k, t);
+};
+let currentUrl = null, currentKey = null, currentTitle = '';
+async function openPass(key, title) {
+  const blob = await getPass(key);
+  if (!blob) return;
+  if (currentUrl) URL.revokeObjectURL(currentUrl);
+  currentUrl = URL.createObjectURL(blob);
+  currentKey = key; currentTitle = title;
+  document.getElementById('vimg').src = currentUrl;
+  document.getElementById('vtitle').textContent = title;
+  document.getElementById('viewer').classList.add('on');
+}
+document.getElementById('vclose').onclick = () => document.getElementById('viewer').classList.remove('on');
+document.getElementById('vreplace').onclick = () => choose(currentKey, currentTitle);
+renderPasses();
 render();
 </script>
 </body>
