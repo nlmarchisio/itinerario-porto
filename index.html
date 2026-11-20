@@ -233,6 +233,7 @@ function convert() {
 document.getElementById('rate').value = localStorage.getItem('rate') || '';
 document.getElementById('rate').oninput = e => { localStorage.setItem('rate', e.target.value); convert(); };
 
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 // ---- Tarjetas de embarque (IndexedDB, solo en el dispositivo) ----
 const FLIGHTS = [
   { id:'LA8049', tab:'Córdoba a São Paulo' },
