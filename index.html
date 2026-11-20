@@ -62,6 +62,21 @@
   #viewer .node.on .city { font-size:1.15rem; font-weight:700; }
   #viewer .city { font-size:1rem; color:#1c0f5a; }
   #viewer .conn { font-weight:700; font-size:.8rem; color:#1c0f5a; }
+  .tide { font-size:.85rem; color:#0a5f78; background:#e4f4f9; border-radius:8px; padding:6px 10px; margin:8px 0; }
+  .tl2 { margin-top:10px; border-left:2px solid var(--line); padding-left:12px; }
+  .blk { display:flex; gap:10px; padding:6px 0; font-size:.93rem; }
+  .bt { min-width:52px; font-weight:700; color:var(--accent); }
+  .blk .bx { flex:1; }
+  .mealtag { display:inline-block; background:#fff3cd; color:#7a4b00; font-size:.78rem; padding:1px 8px; border-radius:99px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .chip { display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:99px; overflow:hidden; font-size:.82rem; background:#fff; }
+  .chip a { padding:6px 10px; text-decoration:none; color:var(--ink); }
+  .chip .cp { appearance:none; border:0; border-left:1px solid var(--line); background:#eef1f4; padding:6px 10px; font-size:.78rem; cursor:pointer; color:var(--ink); }
+  table.dur td:first-child { font-weight:600; }
+  .rest { border-bottom:1px solid var(--line); padding:10px 0; }
+  .rest:last-child { border-bottom:0; }
+  .rest h4 { margin:0 0 2px; font-size:1rem; }
+  .src { font-size:.78rem; color:var(--muted); }
   .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
@@ -112,6 +127,36 @@
   <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados por Diogo (<a href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">sitio</a>) en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
   <div id="days"></div>
 
+  <h2>⏱️ Duración de cada excursión</h2>
+  <div class="card">
+    <table class="dur">
+      <tr><td>Buggy Ponta a Ponta</td><td>4 h</td></tr>
+      <tr><td>Mergulho com Cilindro</td><td>~1 h (15-20 min bajo el agua)</td></tr>
+      <tr><td>Praia dos Carneiros</td><td>Día completo, 7-8 h (estimado)</td></tr>
+      <tr><td>Ilha de Santo Aleixo</td><td>~7 h, ~5 h en la isla</td></tr>
+      <tr><td>Maragogi com Catamarã</td><td>Día completo, 11-12 h con traslado (estimado)</td></tr>
+    </table>
+    <p class="note">Los tiempos de buggy, buceo y Santo Aleixo salen del sitio de Diogo y de GetYourGuide. Maragogi queda a 85-90 km (entre 1 h 20 y 2 h de viaje por tramo) y el regreso suele ser antes de las 16:00. Carneiros está a 50-60 km (cerca de 1 h). Las horas exactas las define Diogo según la marea.</p>
+  </div>
+
+  <h2>🏖️ Playas de aguas tranquilas</h2>
+  <div class="card">
+    <p><b>Frente al departamento (Merepe/Maracaípe).</b> Está a 2-5 min a pie del mar. En esta zona hay olas medias a fuertes, mejor para caminar por la orilla que para nadar.</p>
+    <p><b>Pontal de Maracaípe.</b> Extremo sur, aguas bajas, calmas y claras. Desde Maracaípe son unos 20 min caminando por la arena. <span class="chips">${chipSlot:pontalMar}</span></p>
+    <p><b>Muro Alto.</b> El arrecife forma una piscina natural permanente, muy tranquila con marea baja. Unos 9 km al norte del centro. <span class="chips">${chipSlot:muroAlto}</span></p>
+    <p><b>Pontal do Cupe.</b> Parte del Cupe con aguas más calmas, buena para ir en pareja o con familia, con beach clubs. <span class="chips">${chipSlot:cupe}</span></p>
+    <p><b>Praia de Porto de Galinhas (Vila).</b> Playa del centrinho, con las piscinas naturales a la vista en marea baja. <span class="chips">${chipSlot:praiaPdG}</span></p>
+    <p class="note">Maracaípe y el Cupe tienen olas fuertes en general. Las piscinas de jangada solo aparecen alrededor de la marea baja (marea medida en Porto de Suape). Consultá la recepción antes de entrar al agua.</p>
+  </div>
+
+  <h2>🍽️ Dónde comer</h2>
+  <div class="card" id="restos"></div>
+
+  <h2>📍 Puntos GPS</h2>
+  <div class="card">
+    <p class="note">Tocá el nombre para abrir el mapa o "Copiar" para copiar las coordenadas. Las coordenadas son de OpenStreetMap y pueden estar a unos cientos de metros del punto exacto. Verificalas en el mapa antes de salir.</p>
+    <div id="gps"></div>
+  </div>
   <h2>💰 Resumen</h2>
   <div class="card">
     <table id="summary"></table>
@@ -151,31 +196,158 @@ const PEOPLE = 2;
 const fmt = n => 'R$ ' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
 // perPerson=true multiplica por PEOPLE. Los precios salen de https://diogopasseios.lovable.app/
+// Puntos GPS: coordenadas de OpenStreetMap (referenciales, verificar en el mapa). Sin lat/lng se busca por nombre.
+const PLACES = {
+  hotel:     { n:'Ora Beach Residence (hotel)', q:'Ora Beach Residence, R. Angelim, Porto de Galinhas, Ipojuca, PE' },
+  aeropuerto:{ n:'Aeropuerto de Recife (REC)', lat:-8.1257, lng:-34.9243 },
+  praiaPdG:  { n:'Praia de Porto de Galinhas (Vila)', lat:-8.5008, lng:-35.0030 },
+  piscinas:  { n:'Rua das Piscinas Naturais (jangadas)', lat:-8.5085, lng:-35.0013 },
+  maracaipe: { n:'Praia de Maracaípe', lat:-8.5258, lng:-35.0071 },
+  pontalMar: { n:'Pontal de Maracaípe (extremo sur)', lat:-8.5397, lng:-35.0073 },
+  cupe:      { n:'Praia do Cupe', lat:-8.4741, lng:-34.9949 },
+  muroAlto:  { n:'Praia de Muro Alto', lat:-8.4198, lng:-34.9738 },
+  carneiros: { n:'Igrejinha São Benedito (Carneiros)', lat:-8.6954, lng:-35.0903 },
+  sirinhaem: { n:'Barra de Sirinhaém (salida a Santo Aleixo, aprox.)', lat:-8.5983, lng:-35.1096 },
+  galesMar:  { n:'Porto dos Galés (Maragogi)', lat:-8.9715, lng:-35.1812 },
+  antunes:   { n:'Praia de Antunes (Maragogi)', lat:-8.9746, lng:-35.1800 },
+  beijupira: { n:'Beijupirá', lat:-8.5060, lng:-35.0032, addr:'R. Beijupirá, 90' },
+  peixeTelha:{ n:'Peixe na Telha', q:'Peixe na Telha, R. das Piscinas Naturais 103, Porto de Galinhas', addr:'R. das Piscinas Naturais, 103' },
+  barcaxeira:{ n:'Barcaxeira', q:'Barcaxeira, R. Esperança 458, Porto de Galinhas', addr:'R. Esperança, 458' },
+  tratoria:  { n:'La Tratoria', q:'La Tratoria, Porto de Galinhas' },
+  pescador:  { n:'O Pescador', q:'O Pescador restaurante, Porto de Galinhas' },
+  creperie:  { n:'La Crêperie', q:'La Crêperie, Porto de Galinhas' },
+  barGalo:   { n:'Bar do Galo (Maracaípe)', q:'Bar do Galo, Rio Maracaípe, Porto de Galinhas' }
+};
+
 const days = [
-  { date:'20/11', dow:'Vie', title:'Viaje y llegada', note:'Llegada a Recife 23:55. Traslado al hotel y descanso.', items:[] },
-  { date:'21/11', dow:'Sáb', title:'Buggy Ponta a Ponta', note:'Primero para conocer la zona. Muro Alto, Praia do Cupe, Maracaípe, 4 horas, privado.',
-    items:[{ id:'buggy', name:'Buggy Ponta a Ponta (4 h)', price:450, perPerson:false }] },
-  { date:'22/11', dow:'Dom', title:'Mergulho com Cilindro', note:'Piscinas naturales de Porto de Galinhas. Ideal para principiantes, ~1 h (15-20 min de buceo). Depende de la marea.',
-    items:[{ id:'mergulho', name:'Mergulho com Cilindro', price:150, perPerson:true }] },
-  { date:'23/11', dow:'Lun', title:'Praia dos Carneiros', note:'Banco de arena, baño de arcilla, iglesita São Benedito, day use.',
+  { date:'20/11', dow:'Vie', title:'Viaje y llegada', items:[],
+    tide:'Marea baja 06:34 y 18:49 (el día de viaje no la usás).',
+    blocks:[
+      { t:'11:35', txt:'Embarque en Córdoba (vuelo LA8049 sale 12:25).' },
+      { t:'15:25', txt:'Llegada a São Paulo (GRU). Escala de 3 h 10 min.', meal:'Almuerzo/merienda en el aeropuerto.' },
+      { t:'18:35', txt:'Vuelo a Brasilia (LA3529, llega 20:20). Escala de 1 h.', meal:'Cena liviana en el vuelo o en el aeropuerto.' },
+      { t:'23:55', txt:'Llegada a Recife (LA3496). Traslado al hotel, aprox. 1 h por ruta (transfer privado con Diogo).', places:['aeropuerto','hotel'] },
+      { t:'~01:00', txt:'Check-in y descanso.' }
+    ]},
+  { date:'21/11', dow:'Sáb', title:'Buggy Ponta a Ponta', 
+    items:[{ id:'buggy', name:'Buggy Ponta a Ponta (4 h)', price:450, perPerson:false }],
+    tide:'Marea baja 07:16 (0,44 m). Piscinas visibles 05:46 a 08:46. Atardece 17:18.',
+    blocks:[
+      { t:'09:30', txt:'Desayuno tranquilo después del viaje, en el apartamento (tiene kitchenette) o en La Crêperie.', meal:'Desayuno', places:['creperie'] },
+      { t:'10:30', txt:'Playa frente al departamento. Caminata por la orilla, olas medias. Para meterse al agua con calma, mejor otras playas (ver sección Playas).', places:['hotel','praiaPdG'] },
+      { t:'12:00', txt:'Almuerzo en Barcaxeira (escondidinho de macaxeira, R$ 80-120 por persona). Llegar antes de las 12:30 evita la fila.', meal:'Almuerzo', places:['barcaxeira'] },
+      { t:'13:30', txt:'Buggy Ponta a Ponta, 4 horas: Muro Alto, Cupe, Maracaípe y paradas para fotos. Conviene hacerlo primero para conocer la zona.', ex:'buggy', places:['muroAlto','cupe','maracaipe'] },
+      { t:'17:30', txt:'Vuelta al hotel, ducha y descanso. Atardecer 17:18.' , ex:'buggy' },
+      { t:'20:00', txt:'Cena en Barcaxeira o cerca del centrinho (ruta a pie por R. Esperança).', meal:'Cena', places:['barcaxeira'] },
+      { alt:true, t:'13:30', txt:'Tarde libre: caminata y baño en el Pontal de Maracaípe (20 min a pie al sur), atardecer 17:18.', places:['pontalMar'] }
+    ]},
+  { date:'22/11', dow:'Dom', title:'Mergulho com Cilindro',
+    items:[{ id:'mergulho', name:'Mergulho com Cilindro', price:150, perPerson:true }],
+    tide:'Marea baja 07:59 (0,31 m). Piscinas visibles 06:29 a 09:29. El buceo conviene en esa ventana.',
+    blocks:[
+      { t:'06:45', txt:'Desayuno liviano (fruta, café).', meal:'Desayuno' },
+      { t:'07:30', txt:'Mergulho com Cilindro en las piscinas naturales: unos 60 min con clase, travesía en jangada y 15-20 min de buceo. Confirmar horario exacto con Diogo según la marea.', ex:'mergulho', places:['piscinas'] },
+      { t:'09:30', txt:'Segundo desayuno o brunch en La Crêperie (4,8 en Restaurant Guru).', meal:'Desayuno', places:['creperie'] },
+      { t:'11:00', txt:'Playa de la Vila, frente al centrinho. Zona de mar más tranquila que la del hotel.', places:['praiaPdG'] },
+      { t:'12:30', txt:'Almuerzo en Peixe na Telha, al lado de las piscinas naturales (R$ 150-200 por persona). Abre 10-16 h y 18:30-22 h.', meal:'Almuerzo', places:['peixeTelha'] },
+      { t:'15:30', txt:'Tarde en el Pontal de Maracaípe: aguas bajas y calmas, atardecer 17:18. Caminando desde Maracaípe son unos 20 min.', places:['pontalMar'] },
+      { t:'19:30', txt:'Cena en La Tratoria (italiana, 4,8 con más de 5.700 votos en Restaurant Guru).', meal:'Cena', places:['tratoria'] }
+    ]},
+  { date:'23/11', dow:'Lun', title:'Praia dos Carneiros',
     items:[{ id:'carneiros', name:'Praia dos Carneiros', perPerson:true,
       options:[
         { label:'Rota dos Carneiros (catamarã)', price:120 },
         { label:'Bora Bora con catamarã', price:180 },
         { label:'Bora Bora con lancha', price:200 }
-      ]}] },
-  { date:'24/11', dow:'Mar', title:'Día libre', note:'Playa y descanso en Porto de Galinhas.', items:[] },
-  { date:'25/11', dow:'Mié', title:'Maragogi com Catamarã', note:'Día completo. Piscinas naturales, Caminho de Moisés (según marea), Praia de Antunes. Salida temprano.',
-    items:[{ id:'maragogi', name:'Maragogi com Catamarã', price:150, perPerson:true }] },
-  { date:'26/11', dow:'Jue', title:'Día libre', note:'Descanso tras el día largo de Maragogi.', items:[] },
-  { date:'27/11', dow:'Vie', title:'Ilha de Santo Aleixo', note:'Travesía en lancha, guía, trilha ecológica y tiempo libre en la isla.',
-    items:[{ id:'aleixo', name:'Ilha de Santo Aleixo', price:140, perPerson:true }] },
-  { date:'28/11', dow:'Sáb', title:'Regreso', note:'Check-out y traslado al aeropuerto de Recife (~1 h). Vuelo G3 7618 sale a las 18:15. Salir del hotel alrededor de las 14:00.', items:[] }
+      ]}],
+    tide:'Marea baja 08:42 (0,22 m). Buen día para el banco de arena.',
+    blocks:[
+      { t:'06:45', txt:'Desayuno en el apartamento.', meal:'Desayuno' },
+      { t:'~08:00', txt:'Salida del hotel (hora exacta la confirma Diogo). Viaje de unos 50-60 km, cerca de 1 h.', ex:'carneiros', places:['hotel'] },
+      { t:'09:30', txt:'Paseo en catamarán, banco de arena, baño de arcilla, Igrejinha São Benedito y day use. Llevar protector solar, agua y efectivo.', ex:'carneiros', places:['carneiros'] },
+      { t:'13:00', txt:'Almuerzo en el day use (no incluido en el precio).', meal:'Almuerzo', ex:'carneiros' },
+      { t:'~16:30', txt:'Regreso al hotel (estimado).', ex:'carneiros' },
+      { t:'19:30', txt:'Cena liviana en La Crêperie (francesa, comida saludable, 4,8).', meal:'Cena', places:['creperie'] },
+      { alt:true, t:'09:00', txt:'Día de playa: mañana en la Praia de Porto de Galinhas y tarde en el Pontal de Maracaípe.', places:['praiaPdG','pontalMar'] }
+    ]},
+  { date:'24/11', dow:'Mar', title:'Día libre: Muro Alto y luna llena', items:[],
+    tide:'Marea baja 09:23 (0,18 m, la más baja de la semana). Luna llena: sale del mar casi al atardecer.',
+    blocks:[
+      { t:'08:30', txt:'Desayuno en el apartamento o en el centrinho.', meal:'Desayuno' },
+      { t:'09:30', txt:'Muro Alto: el arrecife forma una piscina natural que existe todo el día, con agua baja y calma con marea baja. Unos 9 km al norte del centro, calculá 15-20 min en auto o Uber.', places:['muroAlto'] },
+      { t:'12:30', txt:'Almuerzo en un quiosco o beach club de Muro Alto o del Cupe.', meal:'Almuerzo', places:['cupe'] },
+      { t:'15:00', txt:'Descanso. El edificio tiene piscina y terraza en la azotea.', places:['hotel'] },
+      { t:'17:15', txt:'Atardecer y salida de la luna llena (martes 24/11).' },
+      { t:'20:00', txt:'Cena especial en Beijupirá (R$ 200-250 por persona, reservar). Abre 12:00 a 23:30.', meal:'Cena', places:['beijupira'] }
+    ]},
+  { date:'25/11', dow:'Mié', title:'Maragogi com Catamarã',
+    items:[{ id:'maragogi', name:'Maragogi com Catamarã', price:150, perPerson:true }],
+    tide:'Marea baja 10:08 (0,19 m). Muy buena para las piscinas de Maragogi.',
+    blocks:[
+      { t:'05:45', txt:'Desayuno temprano y liviano. Dejar algo comprado el día anterior.', meal:'Desayuno' },
+      { t:'~06:30', txt:'Salida (el guía avisa la hora el día anterior según la marea). Viaje de 85-90 km, entre 1 h 20 y 2 h.', ex:'maragogi', places:['hotel'] },
+      { t:'09:00', txt:'Catamarán a las piscinas naturales, Caminho de Moisés (si la marea lo permite) y Praia de Antunes.', ex:'maragogi', places:['galesMar','antunes'] },
+      { t:'13:00', txt:'Almuerzo en Maragogi (no incluido).', meal:'Almuerzo', ex:'maragogi' },
+      { t:'~16:00', txt:'Salida de regreso. Llegada al hotel cerca de las 18:00 (estimado).', ex:'maragogi' },
+      { t:'19:30', txt:'Cena en Peixe na Telha, abre desde las 18:30.', meal:'Cena', places:['peixeTelha'] },
+      { alt:true, t:'09:30', txt:'Mañana de playa en Muro Alto o en el Cupe y tarde de descanso.', places:['muroAlto','cupe'] }
+    ]},
+  { date:'26/11', dow:'Jue', title:'Día libre: jangada y Maracaípe', items:[],
+    tide:'Marea baja 10:57 (0,25 m). Piscinas visibles 09:27 a 12:27.',
+    blocks:[
+      { t:'08:30', txt:'Desayuno.', meal:'Desayuno' },
+      { t:'10:00', txt:'Opcional: jangada a las piscinas naturales de Porto de Galinhas (50 min a 2 h, sale de la Praça das Piscinas Naturais). Precio no consultado, preguntar a Diogo.', places:['piscinas'] },
+      { t:'12:30', txt:'Almuerzo en Bar do Galo, a orillas del Rio Maracaípe (abre 9-17 h, 4,0 en Tripadvisor). Alternativa: Barcaxeira.', meal:'Almuerzo', places:['barGalo','barcaxeira'] },
+      { t:'15:00', txt:'Pontal de Maracaípe: aguas bajas y calmas, y vivero natural de caballitos de mar. Caminata por la arena desde Maracaípe.', places:['pontalMar'] },
+      { t:'18:00', txt:'Paseo y compras en el centrinho (R. Beijupirá y R. Esperança).' },
+      { t:'19:30', txt:'Cena en O Pescador (4,8, mariscos).', meal:'Cena', places:['pescador'] }
+    ]},
+  { date:'27/11', dow:'Vie', title:'Ilha de Santo Aleixo',
+    items:[{ id:'aleixo', name:'Ilha de Santo Aleixo', price:140, perPerson:true }],
+    tide:'Marea baja estimada cerca de las 11:45 (la tabla publicada llega hasta el 26/11).',
+    blocks:[
+      { t:'07:15', txt:'Desayuno.', meal:'Desayuno' },
+      { t:'~08:30', txt:'Salida del hotel y traslado a Barra de Sirinhaém. Hora exacta la confirma Diogo.', ex:'aleixo', places:['hotel','sirinhaem'] },
+      { t:'10:00', txt:'Travesía en lancha, trilha ecológica y tiempo libre en la isla, unas 5 horas allá.', ex:'aleixo' },
+      { t:'13:00', txt:'Almuerzo en la isla o en la estructura de playa (consultar si está incluido).', meal:'Almuerzo', ex:'aleixo' },
+      { t:'~16:00', txt:'Regreso al hotel (estimado, la excursión dura unas 7 horas).', ex:'aleixo' },
+      { t:'19:30', txt:'Cena de despedida: repetir el restaurante que más te gustó o probar Beijupirá si no fuiste.', meal:'Cena', places:['beijupira','tratoria'] },
+      { alt:true, t:'09:30', txt:'Mañana de playa en la Praia de Porto de Galinhas y tarde en Maracaípe.', places:['praiaPdG','maracaipe'] }
+    ]},
+  { date:'28/11', dow:'Sáb', title:'Regreso', items:[],
+    tide:'Marea baja estimada cerca de las 12:30.',
+    blocks:[
+      { t:'08:30', txt:'Desayuno y armado de valijas.', meal:'Desayuno' },
+      { t:'09:30', txt:'Última mañana de playa frente al departamento.', places:['hotel'] },
+      { t:'12:00', txt:'Almuerzo cerca del hotel. Consultar el horario de check-out del departamento.', meal:'Almuerzo', places:['barcaxeira'] },
+      { t:'14:00', txt:'Salida al aeropuerto de Recife (aprox. 1 h por ruta).', places:['aeropuerto'] },
+      { t:'15:15', txt:'Llegada al aeropuerto, 3 h antes del vuelo.' },
+      { t:'18:15', txt:'Vuelo G3 7618 a Córdoba, llega 00:05 del 29/11.', meal:'Cena en el aeropuerto antes de embarcar.' }
+    ]}
 ];
 
 const state = JSON.parse(localStorage.getItem('itin') || '{}');
 const save = () => localStorage.setItem('itin', JSON.stringify(state));
 const isOn = id => state[id] === undefined ? true : state[id];
+
+function mapsUrl(p) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.lat !== undefined ? p.lat + ',' + p.lng : (p.q || p.n)); }
+function copyText(p) { return p.lat !== undefined ? p.lat + ', ' + p.lng : (p.q || p.n); }
+function chip(id) {
+  const p = PLACES[id];
+  return `<span class="chip"><a href="${mapsUrl(p)}" target="_blank" rel="noopener">📍 ${p.n}</a><button type="button" class="cp" data-copy="${copyText(p).replace(/"/g,'&quot;')}">Copiar</button></span>`;
+}
+async function copyToClipboard(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {} ta.remove(); return ok;
+  }
+}
+function bindCopy(root) {
+  root.querySelectorAll('button[data-copy]').forEach(b => b.onclick = async () => {
+    const ok = await copyToClipboard(b.dataset.copy);
+    const old = b.textContent; b.textContent = ok ? 'Copiado' : 'Error'; setTimeout(() => b.textContent = old, 1200);
+  });
+}
 
 function render() {
   const el = document.getElementById('days');
@@ -187,7 +359,7 @@ function render() {
     div.className = 'card day';
     let html = `<div class="date">${d.date}<small>${d.dow}</small></div><div style="flex:1"><h3>${free ? 'Día libre' : d.title}</h3>`;
     html += `<span class="tag ${(d.items.length === 0 || free) ? 'free' : ''}">${d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión'}</span>`;
-    html += `<div class="note">${d.note}</div>`;
+    if (d.tide) html += `<div class="tide">🌊 ${d.tide}</div>`;
     d.items.forEach(i => {
       const price = itemPrice(i);
       html += `<label class="opt"><input type="checkbox" data-id="${i.id}" ${isOn(i.id) ? 'checked' : ''}><span>${i.name} <span class="price">${fmt(price)}${i.perPerson ? ' (2 pers.)' : ' (vehículo)'}</span></span></label>`;
@@ -195,15 +367,23 @@ function render() {
         html += `<select data-opt="${i.id}">` + i.options.map((o, k) => `<option value="${k}" ${(state['opt_'+i.id]||0)==k?'selected':''}>${o.label} · R$ ${o.price} p/p</option>`).join('') + `</select>`;
       }
     });
-    html += '</div>';
+    html += '<div class="tl2">';
+    d.blocks.forEach(b => {
+      if (b.alt && !free) return;
+      if (b.ex && !isOn(b.ex)) return;
+      html += `<div class="blk${b.meal ? ' meal' : ''}"><div class="bt">${b.t}</div><div class="bx">${b.meal && b.txt ? '' : ''}${b.txt}${b.meal ? ` <span class="mealtag">🍽️ ${b.meal}</span>` : ''}`;
+      if (b.places) html += '<div class="chips">' + b.places.map(chip).join('') + '</div>';
+      html += '</div></div>';
+    });
+    html += '</div></div>';
     div.innerHTML = html;
     el.appendChild(div);
   });
   el.querySelectorAll('input[data-id]').forEach(c => c.onchange = () => { state[c.dataset.id] = c.checked; save(); render(); });
   el.querySelectorAll('select[data-opt]').forEach(s => s.onchange = () => { state['opt_'+s.dataset.opt] = +s.value; save(); render(); });
+  bindCopy(el);
   summary();
 }
-
 function unit(i) { return i.options ? i.options[state['opt_'+i.id] || 0].price : i.price; }
 function itemPrice(i) { return unit(i) * (i.perPerson ? PEOPLE : 1); }
 
@@ -226,6 +406,23 @@ function summary() {
   convert();
 }
 
+function fillSections() {
+  document.querySelectorAll('.chips').forEach(c => { c.innerHTML = c.innerHTML.replace(/\$\{chipSlot:(\w+)\}/g, (_, id) => chip(id)); });
+  const R = [
+    { id:'beijupira', t:'Beijupirá', d:'Cocina autoral con mariscos y frutas locales. Icono del pueblo. Ticket medio R$ 200-250 por persona. Abre 12:00 a 23:30. Reservar.', s:'Grupo Dicas' },
+    { id:'peixeTelha', t:'Peixe na Telha', d:'Pescados y mariscos servidos en telha de barro, porciones para dos. R$ 150-200 por persona. Abre 10-16 h y 18:30-22 h. Pegado a las piscinas naturales.', s:'Grupo Dicas' },
+    { id:'barcaxeira', t:'Barcaxeira', d:'Escondidinho de macaxeira gratinado. R$ 80-120 por persona, buena relación precio-calidad. Llegar antes de las 12:00 evita fila.', s:'Grupo Dicas' },
+    { id:'tratoria', t:'La Tratoria', d:'Italiana, pizza y vinos. Nota 4,8 con 5.793 votos.', s:'Restaurant Guru' },
+    { id:'pescador', t:'O Pescador', d:'Brasileña con mariscos. Nota 4,8 con 608 votos.', s:'Restaurant Guru' },
+    { id:'creperie', t:'La Crêperie', d:'Francesa y comida saludable, ideal para desayuno o cena liviana. Nota 4,8 con 4.221 votos.', s:'Restaurant Guru' },
+    { id:'barGalo', t:'Bar do Galo', d:'A orillas del Rio Maracaípe, almuerzo y bebidas (9-17 h). Nota 4,0 con 140 opiniones. Mariscos y cocina brasileña.', s:'Tripadvisor' }
+  ];
+  document.getElementById('restos').innerHTML = R.map(r => `<div class="rest"><h4>${r.t}</h4><div>${r.d}</div><div class="chips">${chip(r.id)}</div><div class="src">Fuente: ${r.s}</div></div>`).join('') +
+    '<p class="note">Las notas son de las fuentes indicadas al momento de la búsqueda y pueden cambiar. Los horarios y precios son orientativos: confirmalos antes de ir.</p>';
+  document.getElementById('gps').innerHTML = Object.keys(PLACES).map(id => `<div style="margin:6px 0">${chip(id)}${PLACES[id].lat !== undefined ? ` <span class="note">${PLACES[id].lat}, ${PLACES[id].lng}</span>` : ''}</div>`).join('');
+  bindCopy(document);
+}
+fillSections();
 function convert() {
   const r = parseFloat(document.getElementById('rate').value);
   document.getElementById('converted').textContent = r > 0 ? `≈ ${(total * r).toLocaleString('es-AR', {maximumFractionDigits:0})} en tu moneda` : '';
