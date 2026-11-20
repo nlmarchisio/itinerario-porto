@@ -77,7 +77,12 @@
   .rest:last-child { border-bottom:0; }
   .rest h4 { margin:0 0 2px; font-size:1rem; }
   .src { font-size:.78rem; color:var(--muted); }
-  .flight:last-child { border-bottom:0; }
+  .wx { font-size:.85rem; color:#7a4b00; background:#fff8e1; border-radius:8px; padding:6px 10px; margin:8px 0; }
+  table.grid { width:100%; border-collapse:collapse; font-size:.85rem; }
+  table.grid th { text-align:left; font-size:.75rem; color:var(--muted); padding:4px 6px 4px 0; border-bottom:1px solid var(--line); }
+  table.grid td { padding:6px 6px 6px 0; text-align:left; vertical-align:top; }
+  table.grid td:last-child { text-align:left; }
+  .scroll { overflow-x:auto; }  .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
   td { padding:6px 0; border-bottom:1px solid var(--line); }
@@ -127,6 +132,19 @@
   <p class="note">Tildá o destildá cada excursión: el día queda libre y el total se recalcula. Los precios son los publicados por Diogo (<a href="https://diogopasseios.lovable.app/" target="_blank" rel="noopener">sitio</a>) en reales por persona, salvo el buggy que es por vehículo. Confirmar disponibilidad y marea por WhatsApp.</p>
   <div id="days"></div>
 
+  <h2>☀️ Clima y sol</h2>
+  <div class="card">
+    <div id="wxTable"></div>
+    <p class="note" id="wxNote"></p>
+    <p class="note">Con índice UV de 8 a 10 la exposición es muy alta: usar protector 50+, gorra y lentes, y evitar el sol entre las 10 y las 15 h. Fuente: Open-Meteo (pronóstico). Se actualiza solo cuando abrís la página con internet.</p>
+  </div>
+
+  <h2>🌊 Mareas y piscinas naturales</h2>
+  <div class="card">
+    <div id="tideTable"></div>
+    <p class="note" id="tideNote"></p>
+    <p class="note">Las piscinas de jangada de Porto de Galinhas aparecen cuando la marea baja de 0,6 m, en la hora y media antes y después de la baja-mar. En Muro Alto la piscina natural existe todo el día. Oficial: Marinha do Brasil, estación Porto de Suape (publicada por <a href="https://samoaresort.com.br/natureza/tabua-de-mares" target="_blank" rel="noopener">Samoa Resort</a>). La columna "Modelo" sale del modelo marino de <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a>, con precisión de ±1 h, y sirve para los días sin tabla oficial. También podés consultar <a href="https://tablademareas.com/br/pernambuco/porto-de-galinhas" target="_blank" rel="noopener">tablademareas.com</a> (esa página carga los datos con JavaScript y no tiene API pública).</p>
+  </div>
   <h2>⏱️ Duración de cada excursión</h2>
   <div class="card">
     <table class="dur">
@@ -148,9 +166,6 @@
     <p><b>Praia de Porto de Galinhas (Vila).</b> Playa del centrinho, con las piscinas naturales a la vista en marea baja. <span class="chips">${chipSlot:praiaPdG}</span></p>
     <p class="note">Maracaípe y el Cupe tienen olas fuertes en general. Las piscinas de jangada solo aparecen alrededor de la marea baja (marea medida en Porto de Suape). Consultá la recepción antes de entrar al agua.</p>
   </div>
-
-  <h2>🍽️ Dónde comer</h2>
-  <div class="card" id="restos"></div>
 
   <h2>📍 Puntos GPS</h2>
   <div class="card">
@@ -359,7 +374,7 @@ function render() {
     div.className = 'card day';
     let html = `<div class="date">${d.date}<small>${d.dow}</small></div><div style="flex:1"><h3>${free ? 'Día libre' : d.title}</h3>`;
     html += `<span class="tag ${(d.items.length === 0 || free) ? 'free' : ''}">${d.items.length === 0 ? 'Sin excursión' : free ? 'Excursión quitada' : 'Excursión'}</span>`;
-    if (d.tide) html += `<div class="tide">🌊 ${d.tide}</div>`;
+    html += wxLine(d) + tideLine(d);
     d.items.forEach(i => {
       const price = itemPrice(i);
       html += `<label class="opt"><input type="checkbox" data-id="${i.id}" ${isOn(i.id) ? 'checked' : ''}><span>${i.name} <span class="price">${fmt(price)}${i.perPerson ? ' (2 pers.)' : ' (vehículo)'}</span></span></label>`;
@@ -408,21 +423,90 @@ function summary() {
 
 function fillSections() {
   document.querySelectorAll('.chips').forEach(c => { c.innerHTML = c.innerHTML.replace(/\$\{chipSlot:(\w+)\}/g, (_, id) => chip(id)); });
-  const R = [
-    { id:'beijupira', t:'Beijupirá', d:'Cocina autoral con mariscos y frutas locales. Icono del pueblo. Ticket medio R$ 200-250 por persona. Abre 12:00 a 23:30. Reservar.', s:'Grupo Dicas' },
-    { id:'peixeTelha', t:'Peixe na Telha', d:'Pescados y mariscos servidos en telha de barro, porciones para dos. R$ 150-200 por persona. Abre 10-16 h y 18:30-22 h. Pegado a las piscinas naturales.', s:'Grupo Dicas' },
-    { id:'barcaxeira', t:'Barcaxeira', d:'Escondidinho de macaxeira gratinado. R$ 80-120 por persona, buena relación precio-calidad. Llegar antes de las 12:00 evita fila.', s:'Grupo Dicas' },
-    { id:'tratoria', t:'La Tratoria', d:'Italiana, pizza y vinos. Nota 4,8 con 5.793 votos.', s:'Restaurant Guru' },
-    { id:'pescador', t:'O Pescador', d:'Brasileña con mariscos. Nota 4,8 con 608 votos.', s:'Restaurant Guru' },
-    { id:'creperie', t:'La Crêperie', d:'Francesa y comida saludable, ideal para desayuno o cena liviana. Nota 4,8 con 4.221 votos.', s:'Restaurant Guru' },
-    { id:'barGalo', t:'Bar do Galo', d:'A orillas del Rio Maracaípe, almuerzo y bebidas (9-17 h). Nota 4,0 con 140 opiniones. Mariscos y cocina brasileña.', s:'Tripadvisor' }
-  ];
-  document.getElementById('restos').innerHTML = R.map(r => `<div class="rest"><h4>${r.t}</h4><div>${r.d}</div><div class="chips">${chip(r.id)}</div><div class="src">Fuente: ${r.s}</div></div>`).join('') +
-    '<p class="note">Las notas son de las fuentes indicadas al momento de la búsqueda y pueden cambiar. Los horarios y precios son orientativos: confirmalos antes de ir.</p>';
   document.getElementById('gps').innerHTML = Object.keys(PLACES).map(id => `<div style="margin:6px 0">${chip(id)}${PLACES[id].lat !== undefined ? ` <span class="note">${PLACES[id].lat}, ${PLACES[id].lng}</span>` : ''}</div>`).join('');
   bindCopy(document);
 }
 fillSections();
+// ---- Clima y mareas ----
+const DKEY = d => '2026-11-' + d.date.slice(0,2);
+// Mareas oficiales (Marinha do Brasil, Porto de Suape) publicadas por Samoa Resort el 20/11/2026
+const OFFICIAL = {
+  '20/11': { low:['06:34 (0,57 m)','18:49 (0,58 m)'], win:'05:04 a 08:04' },
+  '21/11': { low:['07:16 (0,44 m)','19:32 (0,41 m)'], win:'05:46 a 08:46' },
+  '22/11': { low:['07:59 (0,31 m)','20:16 (0,25 m)'], win:'06:29 a 09:29' },
+  '23/11': { low:['08:42 (0,22 m)','21:02 (0,12 m)'], win:'07:12 a 10:12' },
+  '24/11': { low:['09:23 (0,18 m)','21:51 (0,05 m)'], win:'07:53 a 10:53', note:'Luna llena' },
+  '25/11': { low:['10:08 (0,19 m)','22:42 (0,04 m)'], win:'08:38 a 11:38' },
+  '26/11': { low:['10:57 (0,25 m)','23:34 (0,09 m)'], win:'09:27 a 12:27' }
+};
+// Respaldo: valores obtenidos de Open-Meteo el 20/11/2026 (se reemplazan por datos en vivo si hay internet)
+let WX = {"2026-11-20":{code:3,tmax:30,tmin:26,pp:12,mm:0,uv:9.2,sr:"04:49",ss:"17:21",wind:16},"2026-11-21":{code:51,tmax:30,tmin:24,pp:65,mm:0.9,uv:9.2,sr:"04:49",ss:"17:22",wind:18},"2026-11-22":{code:51,tmax:31,tmin:26,pp:20,mm:0.8,uv:9.2,sr:"04:50",ss:"17:22",wind:20},"2026-11-23":{code:51,tmax:30,tmin:27,pp:27,mm:1.4,uv:8.6,sr:"04:50",ss:"17:22",wind:19},"2026-11-24":{code:53,tmax:30,tmin:26,pp:33,mm:4.1,uv:9.2,sr:"04:50",ss:"17:23",wind:20},"2026-11-25":{code:51,tmax:30,tmin:25,pp:33,mm:1.5,uv:8.2,sr:"04:50",ss:"17:23",wind:19},"2026-11-26":{code:51,tmax:30,tmin:25,pp:26,mm:1,uv:8.7,sr:"04:50",ss:"17:24",wind:16},"2026-11-27":{code:51,tmax:30,tmin:26,pp:14,mm:0.6,uv:7.9,sr:"04:50",ss:"17:24",wind:16},"2026-11-28":{code:51,tmax:30,tmin:25,pp:29,mm:1,uv:8.5,sr:"04:51",ss:"17:25",wind:20}};
+let MODEL = {"2026-11-20":["06:00 -0.56","18:00 -0.49"],"2026-11-21":["07:00 -0.68","19:00 -0.67"],"2026-11-22":["07:00 -0.79","20:00 -0.82"],"2026-11-23":["08:00 -0.91","20:00 -0.94"],"2026-11-24":["09:00 -0.93","21:00 -1.06"],"2026-11-25":["10:00 -0.88","22:00 -1.04"],"2026-11-26":["10:00 -0.80","23:00 -0.97"],"2026-11-27":["11:00 -0.67"],"2026-11-28":["00:00 -0.88","12:00 -0.58"]};
+let liveInfo = 'Datos de respaldo del 20/11/2026. Se actualizan con internet.';
+
+const WMO = c => c===0?['☀️','despejado']:c===1?['🌤️','mayormente despejado']:c===2?['⛅','parcialmente nublado']:c===3?['☁️','nublado']:c===45||c===48?['🌫️','niebla']
+  :(c>=51&&c<=57)?['🌦️', c===51?'llovizna leve':c===53?'llovizna moderada':'llovizna densa']:(c>=61&&c<=67)?['🌧️','lluvia']:(c>=80&&c<=82)?['🌧️','chubascos']:c>=95?['⛈️','tormenta']:['🌤️','variable'];
+const uvLabel = u => u>=11?'extremo':u>=8?'muy alto':u>=6?'alto':u>=3?'moderado':'bajo';
+const modelLows = k => (MODEL[k] || []).map(s => s.split(' ')[0]).join(' y ');
+
+function wxLine(d) {
+  const w = WX[DKEY(d)]; if (!w) return '';
+  const [e, txt] = WMO(w.code);
+  return `<div class="wx">${e} ${txt} · ${w.tmin}° a ${w.tmax}° · lluvia ${w.pp}% (${w.mm} mm) · UV ${w.uv} (${uvLabel(w.uv)}) · viento hasta ${w.wind} km/h · sol ${w.sr} a ${w.ss}</div>`;
+}
+function tideLine(d) {
+  const o = OFFICIAL[d.date];
+  if (o) return `<div class="tide">🌊 Marea baja ${o.low.join(' y ')}. Piscinas de jangada visibles de ${o.win}.${o.note ? ' ' + o.note + '.' : ''} <span class="src">Oficial</span></div>`;
+  const m = modelLows(DKEY(d));
+  return m ? `<div class="tide">🌊 Marea baja estimada (modelo, ±1 h): ${m}. Sin tabla oficial todavía.</div>` : '';
+}
+function renderWxTables() {
+  let h = '<div class="scroll"><table class="grid"><tr><th>Día</th><th>Clima</th><th>Temp.</th><th>Lluvia</th><th>UV</th><th>Sol</th></tr>';
+  days.forEach(d => {
+    const w = WX[DKEY(d)]; if (!w) return;
+    const [e, txt] = WMO(w.code);
+    h += `<tr><td><b>${d.date}</b> ${d.dow}</td><td>${e} ${txt}</td><td>${w.tmin}-${w.tmax}°</td><td>${w.pp}% · ${w.mm} mm</td><td>${w.uv}</td><td>${w.sr}-${w.ss}</td></tr>`;
+  });
+  document.getElementById('wxTable').innerHTML = h + '</table></div>';
+  document.getElementById('wxNote').textContent = liveInfo;
+
+  let t = '<div class="scroll"><table class="grid"><tr><th>Día</th><th>Baja-mar oficial</th><th>Piscinas visibles</th><th>Modelo</th></tr>';
+  days.forEach(d => {
+    const o = OFFICIAL[d.date];
+    t += `<tr><td><b>${d.date}</b> ${d.dow}</td><td>${o ? o.low.join('<br>') : '—'}</td><td>${o ? o.win : '—'}</td><td>${modelLows(DKEY(d)) || '—'}</td></tr>`;
+  });
+  document.getElementById('tideTable').innerHTML = t + '</table></div>';
+  document.getElementById('tideNote').textContent = 'Las bajamares de la noche no sirven para las piscinas porque anochece a las 17:20. Tabla oficial disponible hasta el 26/11.';
+}
+function lowsFromHourly(time, h) {
+  const out = {};
+  for (let i = 1; i < time.length - 1; i++) {
+    const v = h[i]; if (v == null || h[i+1] == null || h[i-1] == null) continue;
+    if (v < h[i-1] && v <= h[i+1]) { const k = time[i].slice(0,10); (out[k] = out[k] || []).push(time[i].slice(11) + ' ' + v.toFixed(2)); }
+  }
+  return out;
+}
+async function loadLive() {
+  try {
+    const cached = JSON.parse(localStorage.getItem('live') || 'null');
+    if (cached) { WX = cached.WX; MODEL = cached.MODEL; liveInfo = 'Última actualización: ' + cached.at; }
+  } catch (_) {}
+  renderWxTables(); render();
+  try {
+    const wxUrl = 'https://api.open-meteo.com/v1/forecast?latitude=-8.5008&longitude=-35.003&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,uv_index_max,sunrise,sunset,wind_speed_10m_max&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28';
+    const mUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=-8.5&longitude=-34.99&hourly=sea_level_height_msl&timezone=America%2FRecife&start_date=2026-11-20&end_date=2026-11-28&cell_selection=sea';
+    const [w, m] = await Promise.all([fetch(wxUrl).then(r => r.json()), fetch(mUrl).then(r => r.json())]);
+    const d = w.daily, nw = {};
+    d.time.forEach((k, i) => nw[k] = { code:d.weather_code[i], tmax:Math.round(d.temperature_2m_max[i]), tmin:Math.round(d.temperature_2m_min[i]), pp:d.precipitation_probability_max[i], mm:d.precipitation_sum[i], uv:Math.round(d.uv_index_max[i]*10)/10, sr:d.sunrise[i].slice(11), ss:d.sunset[i].slice(11), wind:Math.round(d.wind_speed_10m_max[i]) });
+    const nm = lowsFromHourly(m.hourly.time, m.hourly.sea_level_height_msl);
+    if (Object.keys(nw).length) WX = nw;
+    if (Object.keys(nm).length) MODEL = nm;
+    const at = new Date().toLocaleString('es-AR', { dateStyle:'short', timeStyle:'short' });
+    liveInfo = 'Actualizado: ' + at;
+    localStorage.setItem('live', JSON.stringify({ WX, MODEL, at }));
+    renderWxTables(); render();
+  } catch (e) { /* sin internet: queda el respaldo o el último dato guardado */ }
+}
 function convert() {
   const r = parseFloat(document.getElementById('rate').value);
   document.getElementById('converted').textContent = r > 0 ? `≈ ${(total * r).toLocaleString('es-AR', {maximumFractionDigits:0})} en tu moneda` : '';
@@ -509,7 +593,7 @@ document.getElementById('openPasses').onclick = () => { document.getElementById(
 document.getElementById('vclose').onclick = () => document.getElementById('viewer').classList.remove('on');
 document.getElementById('vprev').onclick = () => { curF = (curF + FLIGHTS.length - 1) % FLIGHTS.length; showPass(); };
 document.getElementById('vnext').onclick = () => { curF = (curF + 1) % FLIGHTS.length; showPass(); };
-render();
+loadLive();
 </script>
 </body>
 </html>
