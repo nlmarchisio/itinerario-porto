@@ -27,6 +27,9 @@
   .price { font-weight:700; color:var(--ok); white-space:nowrap; }
   .flight { display:grid; grid-template-columns:70px 1fr auto; gap:2px 8px; font-size:.95rem; padding:6px 0; border-bottom:1px dashed var(--line); }
   .flight small { grid-column:2 / 4; color:var(--muted); }
+  .hl { background:#fff3cd; color:#7a4b00; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+  .k { display:inline-block; background:#e4f4f9; color:#0a5f78; padding:2px 10px; border-radius:6px; margin:2px 6px 2px 0; font-size:.95rem; }
+  .k.na { background:#eef1f4; color:var(--muted); font-weight:500; }
   .flight:last-child { border-bottom:0; }
   .pending { color:#b26a00; }
   table { width:100%; border-collapse:collapse; font-size:.95rem; }
@@ -48,9 +51,9 @@
 <main>
   <h2>✈️ Vuelos de ida (20/11)</h2>
   <div class="card">
-    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span>Embarque 11:35</span><small>Terminal 1 · Puerta 3 · Grupo 5</small></div>
-    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span>Embarque 17:45</span><small>Terminal 2 · Puerta sin asignar · Grupo 4</small></div>
-    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span>Embarque 20:30</span><small>Terminal sin asignar · Puerta 19 · Grupo 5</small></div>
+    <div class="flight"><b>LA8049</b><span>Córdoba (COR) 12:25 → São Paulo (GRU) 15:25</span><span class="hl">Embarque 11:35</span><small><b class="k">Terminal 1</b> <b class="k">Puerta 3</b> <b class="k">Grupo 5</b></small></div>
+    <div class="flight"><b>LA3529</b><span>São Paulo (GRU) 18:35 → Brasilia (BSB) 20:20</span><span class="hl">Embarque 17:45</span><small><b class="k">Terminal 2</b> <b class="k na">Puerta sin asignar</b> <b class="k">Grupo 4</b></small></div>
+    <div class="flight"><b>LA3496</b><span>Brasilia (BSB) 21:20 → Recife (REC) 23:55</span><span class="hl">Embarque 20:30</span><small><b class="k na">Terminal sin asignar</b> <b class="k">Puerta 19</b> <b class="k">Grupo 5</b></small></div>
     <p class="note">Reserva LATAM: MTMINY. Confirmar terminal y puerta en las pantallas del aeropuerto. Llegada a Recife 23:55, el hotel queda a ~1 h por ruta. Conviene reservar el transfer privado (consultar con Diogo).</p>
   </div>
 
